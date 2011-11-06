@@ -1,0 +1,1 @@
+Move converter.txt to usr/bin folder, then change the name present in wireless_name.txt to the required SSID wireless name. Run it with root permissions.
