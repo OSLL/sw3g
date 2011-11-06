@@ -1,0 +1,17 @@
+#! /bin/bash
+#
+# $1 -- local ID (1/2)
+# $2 -- remote ID (1/2)
+#
+
+set -x -e
+
+./ether $1
+./ppp $1 $2
+
+route del -net 192.168.1.0/24
+route del -net 192.168.1.0/24
+route del -host 192.168.1.$2
+
+ifconfig eth1 down
+ifconfig ppp0 down

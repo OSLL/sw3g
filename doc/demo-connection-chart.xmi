@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XMI verified="false" xmi.version="1.2" timestamp="2010-09-06T14:20:19" xmlns:UML="http://schema.omg.org/spec/UML/1.3">
+ <XMI.header>
+  <XMI.documentation>
+   <XMI.exporter>umbrello uml modeller http://uml.sf.net</XMI.exporter>
+   <XMI.exporterVersion>1.5.8</XMI.exporterVersion>
+   <XMI.exporterEncoding>UnicodeUTF8</XMI.exporterEncoding>
+  </XMI.documentation>
+  <XMI.metamodel xmi.version="1.3" href="UML.xml" xmi.name="UML"/>
+ </XMI.header>
+ <XMI.content>
+  <UML:Model isSpecification="false" isAbstract="false" isLeaf="false" xmi.id="m1" isRoot="false" name="UML Model">
+   <UML:Namespace.ownedElement>
+    <UML:Stereotype visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="folder" name="folder"/>
+    <UML:Stereotype visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="datatype" name="datatype"/>
+    <UML:Model stereotype="folder" visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Logical View" name="Logical View">
+     <UML:Namespace.ownedElement>
+      <UML:Package stereotype="folder" visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Datatypes" name="Datatypes">
+       <UML:Namespace.ownedElement>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="hsIxG2gKyRmh" name="int"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="1IEHnEBxJuhs" name="char"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="AkUO0NzhFHeV" name="bool"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="IIoGjaxkq9zd" name="float"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="LAYe3GUDyyZy" name="double"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="KYfZnH35ZrKI" name="short"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="PF0DP0rk8NNB" name="long"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="drMcova8REhD" name="unsigned int"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="ViI5ZaLwqKAF" name="unsigned short"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="IzxQMKcyAyay" name="unsigned long"/>
+        <UML:DataType stereotype="datatype" visibility="public" isSpecification="false" namespace="Datatypes" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="s86HMlUqUlt1" name="string"/>
+       </UML:Namespace.ownedElement>
+      </UML:Package>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="sfGl1o6CqBFr" name="MN"/>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="dLCIZvIN0SBB" name="PPP"/>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="U5EoGXLBnjBF" name="App server"/>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="MsuxKyB8EgUP" name="PPP server"/>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Q2daBQdYlp1q" name="IPSEC server"/>
+      <UML:Class visibility="public" isSpecification="false" namespace="Logical View" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="ZaYY1qIZNBWy" name="WLAN AP"/>
+     </UML:Namespace.ownedElement>
+     <XMI.extension xmi.extender="umbrello">
+      <diagrams>
+       <diagram showopsig="1" linecolor="#ff0000" snapx="10" showattribassocs="1" snapy="10" linewidth="0" showattsig="1" showpubliconly="1" showpackage="1" showstereotype="1" name="collaboration diagram" font="Arial,10,-1,5,50,0,0,0,0,0" canvasheight="826" canvaswidth="1031" localid="weA8kyr0CEo9" snapcsgrid="0" showgrid="0" showops="1" usefillcolor="1" fillcolor="#ffff00" zoom="100" xmi.id="1QGxZm1yZ2Im" documentation="1: set up PPP link, get PPP-IP&#xa;2: exchange data with App server through PPP server, PPP-IP to App-IP&#xa;3: set up WLAN link, get WLAN-IP&#xa;4: initiate handover to IPSEC server: add route to PPP-IP through IPSEC-server-IP&#xa;5: instruct IPSEC server to set up tunnel: decapsulate packets coming from WLAN-IP&#xa;&#xa;Establish IPSEC tunnel: everything sent from PPP-IP to 0.0.0.0/0 enters tunnel and gets forwarded to IPSEC-server-IP through WLAN-IP.&#xa;&#xa;6: exchange data with App-IP through IPSEC tunnel from MN to IPSEC server" showscope="1" snapgrid="0" showatts="1" type="4">
+        <widgets>
+         <objectwidget linecolor="#ff0000" usesdiagramfillcolor="0" linewidth="none" usesdiagramusefillcolor="1" instancename="" x="357" decon="0" showstereotype="1" y="432" font="Arial,10,-1,5,50,0,1,0,0,0" localid="bTnAGm6npMXF" width="56" isinstance="0" multipleinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="sfGl1o6CqBFr" height="28" drawasactor="0"/>
+         <objectwidget linecolor="#ff0000" usesdiagramfillcolor="0" linewidth="none" usesdiagramusefillcolor="1" instancename="" x="359" decon="0" showstereotype="1" y="83" font="Arial,10,-1,5,50,0,1,0,0,0" localid="uMsv61jzOKyW" width="92" isinstance="0" multipleinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="U5EoGXLBnjBF" height="27" drawasactor="0"/>
+         <objectwidget linecolor="#ff0000" usesdiagramfillcolor="0" linewidth="none" usesdiagramusefillcolor="1" instancename="" x="107" decon="0" showstereotype="1" y="247" font="Arial,10,-1,5,50,0,1,0,0,0" localid="RBbe3vXx0Wgz" width="94" isinstance="0" multipleinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="MsuxKyB8EgUP" height="27" drawasactor="0"/>
+         <objectwidget linecolor="#ff0000" usesdiagramfillcolor="0" linewidth="none" usesdiagramusefillcolor="1" instancename="" x="563" decon="0" showstereotype="1" y="169" font="Arial,10,-1,5,50,0,1,0,0,0" localid="uZ0jEnmzTKmY" width="110" isinstance="0" multipleinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="Q2daBQdYlp1q" height="27" drawasactor="0"/>
+         <objectwidget linecolor="#ff0000" usesdiagramfillcolor="0" linewidth="none" usesdiagramusefillcolor="1" instancename="" x="585" decon="0" showstereotype="1" y="320" font="Arial,10,-1,5,50,0,1,0,0,0" localid="weA8kyr0CEo9" width="88" isinstance="0" multipleinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="ZaYY1qIZNBWy" height="29" drawasactor="0"/>
+        </widgets>
+        <messages/>
+        <associations>
+         <assocwidget indexa="2" indexb="1" visibilityA="0" widgetaid="bTnAGm6npMXF" visibilityB="0" roleBdoc="" roleAdoc="" linecolor="none" changeabilityA="900" totalcounta="3" changeabilityB="900" widgetbid="RBbe3vXx0Wgz" totalcountb="2" type="505" documentation="" linewidth="none">
+          <linepath>
+           <startpoint startx="357" starty="432"/>
+           <endpoint endx="125" endy="274"/>
+           <point x="202" y="413"/>
+           <point x="125" y="408"/>
+          </linepath>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="127" showstereotype="1" y="421" text="1: set up PPP link" font="Arial,10,-1,5,50,0,0,0,0,0" pretext="" role="706" width="120" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="flmK8Ya3NHRT" height="21"/>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="225" showstereotype="1" y="407" text="1" font="Arial,10,-1,5,50,0,0,0,0,0" pretext="" role="701" width="16" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="c8de6B9fusBy" height="21"/>
+         </assocwidget>
+         <assocwidget indexa="1" indexb="1" visibilityA="0" widgetaid="bTnAGm6npMXF" visibilityB="0" roleBdoc="" roleAdoc="" linecolor="none" changeabilityA="900" totalcounta="3" changeabilityB="900" widgetbid="uMsv61jzOKyW" totalcountb="2" type="505" documentation="" linewidth="none">
+          <linepath>
+           <startpoint startx="357" starty="432"/>
+           <endpoint endx="359" endy="110"/>
+           <point x="201" y="372"/>
+           <point x="201" y="247"/>
+           <point x="201" y="149"/>
+          </linepath>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="140" showstereotype="1" y="308" text="2: data flow through PPP" font="Arial,10,-1,5,50,0,0,0,0,0" pretext="" role="706" width="169" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="0IBU6uvjff2o" height="21"/>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="259" showstereotype="1" y="378" text="2" font="Arial,10,-1,5,50,0,0,0,0,0" pretext="" role="701" width="16" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="EapZsF1SNe6T" height="21"/>
+         </assocwidget>
+         <assocwidget indexa="1" indexb="1" visibilityA="0" widgetaid="bTnAGm6npMXF" visibilityB="0" roleBdoc="" roleAdoc="" linecolor="none" changeabilityA="900" totalcounta="2" changeabilityB="900" widgetbid="weA8kyr0CEo9" totalcountb="2" type="505" documentation="" linewidth="none">
+          <linepath>
+           <startpoint startx="413" starty="432"/>
+           <endpoint endx="585" endy="349"/>
+           <point x="532" y="417"/>
+          </linepath>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="432" showstereotype="1" y="439" text="3: set up WLAN link" font="Arial,10,-1,5,50,0,0,0,0,0" pretext="" role="706" width="135" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="qE6i6Ie4YpYd" height="21"/>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="467" showstereotype="1" y="411" text="3" font="Arial,10,-1,5,50,0,0,0,0,0" pretext="" role="701" width="16" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="iSML7O7Jzxtp" height="21"/>
+         </assocwidget>
+         <assocwidget indexa="2" indexb="1" visibilityA="0" widgetaid="bTnAGm6npMXF" visibilityB="0" roleBdoc="" roleAdoc="" linecolor="none" changeabilityA="900" totalcounta="4" changeabilityB="900" widgetbid="uZ0jEnmzTKmY" totalcountb="2" type="505" documentation="" linewidth="none">
+          <linepath>
+           <startpoint startx="413" starty="432"/>
+           <endpoint endx="563" endy="196"/>
+           <point x="424" y="376"/>
+           <point x="446" y="210"/>
+          </linepath>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="386" showstereotype="1" y="293" text="5: establish IPSEC tunnel" font="Arial,10,-1,5,50,0,0,0,0,0" pretext="" role="706" width="172" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="AuHXWMyKa30e" height="21"/>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="418" showstereotype="1" y="377" text="5" font="Arial,10,-1,5,50,0,0,0,0,0" pretext="" role="701" width="16" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="JegrUDSCfnXm" height="21"/>
+         </assocwidget>
+         <assocwidget indexa="1" indexb="1" visibilityA="0" widgetaid="bTnAGm6npMXF" visibilityB="0" roleBdoc="" roleAdoc="" linecolor="none" changeabilityA="900" totalcounta="4" changeabilityB="900" widgetbid="uMsv61jzOKyW" totalcountb="3" type="505" documentation="" linewidth="none">
+          <linepath>
+           <startpoint startx="378" starty="432"/>
+           <endpoint endx="378" endy="110"/>
+          </linepath>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="260" showstereotype="1" y="176" text="4: : initiate handover to IPSEC server" font="Arial,10,-1,5,50,0,0,0,0,0" pretext="" role="706" width="248" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="Bf48axvkpBFJ" height="21"/>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="363" showstereotype="1" y="386" text="4" font="Arial,10,-1,5,50,0,0,0,0,0" pretext="" role="701" width="17" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="XBe5EehVJNNl" height="21"/>
+         </assocwidget>
+         <assocwidget indexa="3" indexb="2" visibilityA="0" widgetaid="bTnAGm6npMXF" visibilityB="0" roleBdoc="" roleAdoc="" linecolor="none" changeabilityA="900" totalcounta="4" changeabilityB="900" widgetbid="uMsv61jzOKyW" totalcountb="3" type="505" documentation="" linewidth="none">
+          <linepath>
+           <startpoint startx="413" starty="432"/>
+           <endpoint endx="451" endy="110"/>
+           <point x="585" y="320"/>
+           <point x="563" y="169"/>
+          </linepath>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="592" showstereotype="1" y="220" text="6: data flow through IPSEC tunnel" font="Arial,10,-1,5,50,0,0,0,0,0" pretext="" role="706" width="228" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="YnvDaQyk32sb" height="21"/>
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="472" showstereotype="1" y="374" text="6" font="Arial,10,-1,5,50,0,0,0,0,0" pretext="" role="701" width="16" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="xmLmxY5SkhXw" height="21"/>
+         </assocwidget>
+        </associations>
+       </diagram>
+       <diagram showopsig="1" linecolor="#ff0000" snapx="10" showattribassocs="1" snapy="10" linewidth="0" showattsig="1" showpubliconly="1" showpackage="1" showstereotype="1" name="sequence diagram" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" canvasheight="826" canvaswidth="1034" localid="HshyWeIDzCPB" snapcsgrid="0" showgrid="1" showops="1" usefillcolor="1" fillcolor="#ffff00" zoom="100" xmi.id="akSOy1YYt3ho" documentation="" showscope="1" snapgrid="1" showatts="1" type="3">
+        <widgets>
+         <objectwidget linecolor="#ff0000" usesdiagramfillcolor="0" linewidth="none" usesdiagramusefillcolor="1" instancename="" x="230" decon="0" showstereotype="1" y="50" font="DejaVu Sans,9,-1,0,50,0,1,0,0,0" localid="EJMXYDF83xGQ" width="50" isinstance="0" multipleinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="sfGl1o6CqBFr" height="24" drawasactor="0"/>
+         <objectwidget linecolor="#ff0000" usesdiagramfillcolor="0" linewidth="none" usesdiagramusefillcolor="1" instancename="" x="340" decon="0" showstereotype="1" y="50" font="DejaVu Sans,9,-1,0,50,0,1,0,0,0" localid="lrf6OaUtmHtK" width="89" isinstance="0" multipleinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="MsuxKyB8EgUP" height="24" drawasactor="0"/>
+         <objectwidget linecolor="#ff0000" usesdiagramfillcolor="0" linewidth="none" usesdiagramusefillcolor="1" instancename="" x="610" decon="0" showstereotype="1" y="50" font="DejaVu Sans,9,-1,0,50,0,1,0,0,0" localid="liUuJJcrt9je" width="89" isinstance="0" multipleinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="U5EoGXLBnjBF" height="24" drawasactor="0"/>
+         <objectwidget linecolor="#ff0000" usesdiagramfillcolor="0" linewidth="none" usesdiagramusefillcolor="1" instancename="" x="800" decon="0" showstereotype="1" y="50" font="DejaVu Sans,9,-1,0,50,0,1,0,0,0" localid="LuDCeS5zvoI2" width="100" isinstance="0" multipleinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="Q2daBQdYlp1q" height="24" drawasactor="0"/>
+         <objectwidget linecolor="#ff0000" usesdiagramfillcolor="0" linewidth="none" usesdiagramusefillcolor="1" instancename="" x="460" decon="0" showstereotype="1" y="50" font="DejaVu Sans,9,-1,0,50,0,1,0,0,0" localid="HshyWeIDzCPB" width="76" isinstance="0" multipleinstance="0" usefillcolor="1" fillcolor="#ffff00" xmi.id="ZaYY1qIZNBWy" height="24" drawasactor="0"/>
+         <notewidget width="138" showstereotype="1" x="80" noteType="0" y="160" usesdiagramusefillcolor="1" usesdiagramfillcolor="1" isinstance="0" fillcolor="none" height="51" linecolor="none" xmi.id="aybosebLJlay" usefillcolor="1" linewidth="none" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" text="we have IP(PPP)"/>
+         <notewidget width="127" showstereotype="1" x="110" noteType="0" y="260" usesdiagramusefillcolor="1" usesdiagramfillcolor="1" isinstance="0" fillcolor="none" height="56" linecolor="none" xmi.id="JWa0POwvVvNB" usefillcolor="1" linewidth="none" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" text="we have IP(WLAN)"/>
+         <notewidget width="110" showstereotype="1" x="920" noteType="0" y="110" usesdiagramusefillcolor="1" usesdiagramfillcolor="1" isinstance="0" fillcolor="none" height="50" linecolor="none" xmi.id="sw9NsOIIVfxo" usefillcolor="1" linewidth="none" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" text="IP(IPSec)"/>
+         <notewidget width="78" showstereotype="1" x="660" noteType="0" y="110" usesdiagramusefillcolor="1" usesdiagramfillcolor="1" isinstance="0" fillcolor="none" height="52" linecolor="none" xmi.id="sw9NsOIIVfxo" usefillcolor="1" linewidth="none" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" text="IP(App)"/>
+         <notewidget width="134" showstereotype="1" x="80" noteType="0" y="80" usesdiagramusefillcolor="1" usesdiagramfillcolor="1" isinstance="0" fillcolor="none" height="54" linecolor="none" xmi.id="sw9NsOIIVfxo" usefillcolor="1" linewidth="none" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" text="We have IP(IPSec) as configuration parameter"/>
+         <combinedFragmentwidget width="845" showstereotype="1" x="170" y="420" usesdiagramusefillcolor="1" usesdiagramfillcolor="1" isinstance="0" fillcolor="none" height="96" CombinedFragmenttype="8" linecolor="none" xmi.id="8YCmQ2KcSoXe" combinedFragmentname="" usefillcolor="1" documentation="" linewidth="none" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0"/>
+        </widgets>
+        <messages>
+         <messagewidget linecolor="none" usesdiagramfillcolor="1" widgetbid="lrf6OaUtmHtK" textid="uM9kaxUa3FbR" operation="setupPPPlink" linewidth="none" seqnum="1" usesdiagramusefillcolor="1" x="255" showstereotype="1" y="128" widgetaid="EJMXYDF83xGQ" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" width="137" isinstance="0" usefillcolor="1" fillcolor="none" xmi.id="xuvnarIE7VDK" height="32" sequencemessagetype="1000">
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="270" showstereotype="1" y="110" text="1: setupPPPlink" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" pretext="" role="704" width="105" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="uM9kaxUa3FbR" height="18"/>
+         </messagewidget>
+         <messagewidget linecolor="none" usesdiagramfillcolor="1" widgetbid="liUuJJcrt9je" textid="Jlx6q05AEsNq" operation="Dataflow through 3G/ppp" linewidth="none" seqnum="2" usesdiagramusefillcolor="1" x="256" showstereotype="1" y="198" widgetaid="EJMXYDF83xGQ" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" width="397" isinstance="0" usefillcolor="1" fillcolor="none" xmi.id="6GvDOyWaaX7c" height="8" sequencemessagetype="1001">
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="270" showstereotype="1" y="180" text="2: Dataflow through 3G/ppp" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" pretext="" role="704" width="181" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="Jlx6q05AEsNq" height="18"/>
+         </messagewidget>
+         <messagewidget linecolor="none" usesdiagramfillcolor="1" widgetbid="HshyWeIDzCPB" textid="veknVNnaO1XF" operation="GetWlanIP" linewidth="none" seqnum="3" usesdiagramusefillcolor="1" x="255" showstereotype="1" y="258" widgetaid="EJMXYDF83xGQ" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" width="251" isinstance="0" usefillcolor="1" fillcolor="none" xmi.id="xgGeWIv4jr5b" height="32" sequencemessagetype="1000">
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="270" showstereotype="1" y="240" text="3: GetWlanIP" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" pretext="" role="704" width="87" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="veknVNnaO1XF" height="18"/>
+         </messagewidget>
+         <messagewidget linecolor="none" usesdiagramfillcolor="1" widgetbid="liUuJJcrt9je" textid="KHYHzaTGDnA0" operation="4:Initiate 3g/wlan handover &lt;IP(IPSec), IP(PPP)>" linewidth="none" seqnum="" usesdiagramusefillcolor="1" x="256" showstereotype="1" y="333" widgetaid="EJMXYDF83xGQ" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" width="397" isinstance="0" usefillcolor="1" fillcolor="none" xmi.id="V52cpOamHgbr" height="8" sequencemessagetype="1001">
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="260" showstereotype="1" y="320" text=": 4:Initiate 3g/wlan handover &lt;IP(IPSec), IP(PPP)>" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" pretext="" role="704" width="318" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="KHYHzaTGDnA0" height="18"/>
+         </messagewidget>
+         <messagewidget linecolor="none" usesdiagramfillcolor="1" widgetbid="liUuJJcrt9je" textid="kZ3qsZwAJK4A" operation="route IP(PPP)->IP(IPSec)" linewidth="none" seqnum="" usesdiagramusefillcolor="1" x="652" showstereotype="1" y="444" widgetaid="liUuJJcrt9je" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" width="50" isinstance="0" usefillcolor="1" fillcolor="none" xmi.id="X3SZL1i9AUD2" height="32" sequencemessagetype="1000">
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="660" showstereotype="1" y="430" text=": route IP(PPP)->IP(IPSec)" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" pretext="" role="705" width="168" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="kZ3qsZwAJK4A" height="18"/>
+         </messagewidget>
+         <messagewidget linecolor="none" usesdiagramfillcolor="1" widgetbid="LuDCeS5zvoI2" textid="lPUcKf2tqt5K" operation="setup_decapsulate_rule&lt; IP(WLAN)>" linewidth="none" seqnum="" usesdiagramusefillcolor="1" x="256" showstereotype="1" y="376" widgetaid="EJMXYDF83xGQ" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" width="593" isinstance="0" usefillcolor="1" fillcolor="none" xmi.id="utkY4iknk0lA" height="8" sequencemessagetype="1001">
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="260" showstereotype="1" y="360" text=": setup_decapsulate_rule&lt; IP(WLAN)>" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" pretext="" role="704" width="245" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="lPUcKf2tqt5K" height="18"/>
+         </messagewidget>
+         <messagewidget linecolor="none" usesdiagramfillcolor="1" widgetbid="LuDCeS5zvoI2" textid="nPgxummJmDnh" operation="setkey spadd ... -P in ..." linewidth="none" seqnum="" usesdiagramusefillcolor="1" x="848" showstereotype="1" y="436" widgetaid="LuDCeS5zvoI2" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" width="50" isinstance="0" usefillcolor="1" fillcolor="none" xmi.id="S2BZ9LOXYW5S" height="32" sequencemessagetype="1000">
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="850" showstereotype="1" y="420" text=": setkey spadd ... -P in ..." font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" pretext="" role="705" width="163" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="nPgxummJmDnh" height="18"/>
+         </messagewidget>
+         <messagewidget linecolor="none" usesdiagramfillcolor="1" widgetbid="EJMXYDF83xGQ" textid="Bugj5pzkce9Q" operation="setup_tunnel: IP(PPP)->*  ==> IP(WLAN)->IP(IPSec)" linewidth="none" seqnum="6" usesdiagramusefillcolor="1" x="253" showstereotype="1" y="444" widgetaid="EJMXYDF83xGQ" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" width="50" isinstance="0" usefillcolor="1" fillcolor="none" xmi.id="GbH0zXyHxYja" height="32" sequencemessagetype="1000">
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="260" showstereotype="1" y="430" text="6: setup_tunnel: IP(PPP)->*  ==> IP(WLAN)->IP(IPSec)" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" pretext="" role="705" width="345" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="Bugj5pzkce9Q" height="18"/>
+         </messagewidget>
+         <messagewidget linecolor="none" usesdiagramfillcolor="1" widgetbid="liUuJJcrt9je" textid="PKQvRw7BM9Vy" operation="Dataflow throung tunnel" linewidth="none" seqnum="7" usesdiagramusefillcolor="1" x="256" showstereotype="1" y="573" widgetaid="EJMXYDF83xGQ" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" width="397" isinstance="0" usefillcolor="1" fillcolor="none" xmi.id="kMAsRL73qlaP" height="8" sequencemessagetype="1001">
+          <floatingtext linecolor="none" usesdiagramfillcolor="1" linewidth="none" usesdiagramusefillcolor="1" x="260" showstereotype="1" y="560" text="7: Dataflow throung tunnel" font="DejaVu Sans,9,-1,0,50,0,0,0,0,0" pretext="" role="704" width="176" isinstance="0" posttext="" usefillcolor="1" fillcolor="none" xmi.id="PKQvRw7BM9Vy" height="18"/>
+         </messagewidget>
+        </messages>
+        <associations/>
+       </diagram>
+      </diagrams>
+     </XMI.extension>
+    </UML:Model>
+    <UML:Model stereotype="folder" visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Use Case View" name="Use Case View">
+     <UML:Namespace.ownedElement/>
+    </UML:Model>
+    <UML:Model stereotype="folder" visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Component View" name="Component View">
+     <UML:Namespace.ownedElement/>
+    </UML:Model>
+    <UML:Model stereotype="folder" visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Deployment View" name="Deployment View">
+     <UML:Namespace.ownedElement/>
+    </UML:Model>
+    <UML:Model stereotype="folder" visibility="public" isSpecification="false" namespace="m1" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="Entity Relationship Model" name="Entity Relationship Model">
+     <UML:Namespace.ownedElement/>
+    </UML:Model>
+   </UML:Namespace.ownedElement>
+  </UML:Model>
+ </XMI.content>
+ <XMI.extensions xmi.extender="umbrello">
+  <docsettings viewid="akSOy1YYt3ho" uniqueid="CNJvn4fS0FJq" documentation=""/>
+  <listview>
+   <listitem open="1" type="800" id="Views">
+    <listitem open="1" type="801" id="Logical View">
+     <listitem open="0" type="806" id="1QGxZm1yZ2Im" label="collaboration diagram"/>
+     <listitem open="0" type="810" id="akSOy1YYt3ho" label="sequence diagram"/>
+     <listitem open="1" type="813" id="U5EoGXLBnjBF"/>
+     <listitem open="1" type="813" id="Q2daBQdYlp1q"/>
+     <listitem open="1" type="813" id="sfGl1o6CqBFr"/>
+     <listitem open="1" type="813" id="dLCIZvIN0SBB"/>
+     <listitem open="1" type="813" id="MsuxKyB8EgUP"/>
+     <listitem open="1" type="813" id="ZaYY1qIZNBWy"/>
+     <listitem open="0" type="830" id="Datatypes">
+      <listitem open="1" type="829" id="AkUO0NzhFHeV"/>
+      <listitem open="1" type="829" id="1IEHnEBxJuhs"/>
+      <listitem open="1" type="829" id="LAYe3GUDyyZy"/>
+      <listitem open="1" type="829" id="IIoGjaxkq9zd"/>
+      <listitem open="1" type="829" id="hsIxG2gKyRmh"/>
+      <listitem open="1" type="829" id="PF0DP0rk8NNB"/>
+      <listitem open="1" type="829" id="KYfZnH35ZrKI"/>
+      <listitem open="1" type="829" id="s86HMlUqUlt1"/>
+      <listitem open="1" type="829" id="drMcova8REhD"/>
+      <listitem open="1" type="829" id="IzxQMKcyAyay"/>
+      <listitem open="1" type="829" id="ViI5ZaLwqKAF"/>
+     </listitem>
+    </listitem>
+    <listitem open="1" type="802" id="Use Case View"/>
+    <listitem open="1" type="821" id="Component View"/>
+    <listitem open="1" type="827" id="Deployment View"/>
+    <listitem open="1" type="836" id="Entity Relationship Model"/>
+   </listitem>
+  </listview>
+  <codegeneration>
+   <codegenerator language="C++"/>
+  </codegeneration>
+ </XMI.extensions>
+</XMI>

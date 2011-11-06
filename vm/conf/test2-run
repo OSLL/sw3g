@@ -1,0 +1,14 @@
+#! /bin/bash
+
+set -x -e
+
+go_with_gap()
+{
+    sleep 5
+    ifconfig $1 down
+    ifconfig $2 up
+}
+
+go_with_gap eth0 eth1
+go_with_gap eth1 ppp0
+go_with_gap ppp0 eth0

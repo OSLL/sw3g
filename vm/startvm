@@ -1,0 +1,7 @@
+#! /bin/bash
+
+qemu/bin/qemu -cdrom image/*.iso -cpu coreduo \
+    -net nic,vlan=1 -net socket,vlan=1,mcast=230.0.0.1:1 \
+    -net nic,vlan=2 -net socket,vlan=2,mcast=230.0.0.1:2 \
+    -net nic,vlan=3 -net tap,vlan=3,script=./tapstart,downscript=./tapstop \
+    "$@" &

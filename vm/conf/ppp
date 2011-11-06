@@ -1,0 +1,9 @@
+#! /bin/bash
+#
+# $1 -- local ID (1/2)
+# $2 -- remote ID (1/2)
+#
+
+[ $# -eq 2 ] || exit 1
+
+pppd -detach 192.168.1.$1:192.168.1.$2 /dev/ttyS0 &
