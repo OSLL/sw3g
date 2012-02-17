@@ -23,11 +23,15 @@ void bat::setupGeneral()
 
     status->setNum(deviceInfo->networkSignalStrength(QSystemNetworkInfo::WcdmaMode));
 
-    connect(deviceInfo, SIGNAL(networkSignalStrengthChanged(QSystemNetworkInfo::GsmMode,int)),
-            status, SLOT(setNum(int)));
+    connect(deviceInfo, SIGNAL(networkSignalStrengthChanged(QSystemNetworkInfo::NetworkMode, int)),
+            this, SLOT(signalStrengthChanged(QSystemNetworkInfo::NetworkMode, int)));
     compare();
     exit(0);
     setLayout(lay);
+}
+
+void bat::signalStrengthChanged(QSystemNetworkInfo::NetworkMode, int strength) {
+    status->setNum(strength);
 }
 
 void bat::compare()

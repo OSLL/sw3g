@@ -26,6 +26,7 @@ private:
     void compare();
 
     QSystemNetworkInfo *deviceInfo;
-
+private slots:
+    void signalStrengthChanged(QSystemNetworkInfo::NetworkMode, int);
 
 };
