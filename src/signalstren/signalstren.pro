@@ -3,7 +3,7 @@
 ######################################################################
 
 CONFIG += mobility
- MOBILITY = systeminfo
+MOBILITY = systeminfo
 TEMPLATE = app
 TARGET = 
 DEPENDPATH += .

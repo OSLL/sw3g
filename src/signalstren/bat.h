@@ -21,7 +21,7 @@ public:
 
 private:
 
-        QLabel *status;
+    QLabel *status;
     void setupGeneral();
     void compare();
 
