@@ -62,6 +62,7 @@ namespace fine {
 
         map< network,vector<series> > parameter_values_;
         set<parameter> watched_params_;
+        set<network> networks_;
     public:
         void dump() {
             for (map< network, vector<series> >::iterator i = parameter_values_.begin(); i != parameter_values_.end(); ++i) {
@@ -79,13 +80,42 @@ namespace fine {
                             "variance=" << ser.variance() << ",stdev=" << ser.stdev() << ",last_value=" <<
                             ser.peek() << "\n\n";
                 }
-                cout << "\n\n\n";
+                cout << "\n\n";
             }
         }
 
         static net_info& instance() {
             static net_info the_instance;
             return the_instance;
+        }
+
+        /**
+          * Returns recorded series of measurements for the specified network parameter.
+          * @param net - network
+          * @param param - parameter to measure
+          */
+        const series &param_values(const network &net, const parameter &param) const {
+            vector<series> srs = parameter_values_.at(net);
+            for (vector<series>::iterator i = srs.begin(); i != srs.end(); ++i) {
+                if ((*i).for_param() == param) {
+                    return *i;
+                }
+            }
+        }
+
+        /**
+          * Returns the list of networks which currently have any parameter measurements.
+          */
+        const set<network> network_list() const {
+            return networks_;
+        }
+
+        /**
+          * Returns the list of measured parameters.
+          * (It is the same for each network)
+          */
+        const set<parameter> param_list() const {
+            return watched_params_;
         }
 
         /**
@@ -96,6 +126,9 @@ namespace fine {
           * @param nets - all detected networks
           */
         void update(set<network> &nets) {
+            networks_.clear();
+            networks_.insert(nets.begin(), nets.end());
+
             // remove measurements for no longer existing networks
             for(map< network, vector<series> >::iterator iter = parameter_values_.begin();
                 iter != parameter_values_.end(); ) {

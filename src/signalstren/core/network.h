@@ -8,6 +8,8 @@
 #include <string>
 #include <boost/noncopyable.hpp>
 
+using namespace std;
+
 namespace fine {
     /**
       * Network type
@@ -26,6 +28,12 @@ namespace fine {
     };
 
     /**
+      * Prefixes for switch scripts.
+      * Indexed by network_type.
+      */
+    string network_type_prefixes[] = {"wlan", "3g"};
+
+    /**
       * Operator++ to support enumeration over supported network types.
       */
     network_type& operator++(network_type& type) {
@@ -41,9 +49,9 @@ namespace fine {
       */
     class network {
     private:
-        const std::string id_;
-        const std::string name_;
-        const network_type type_;
+        std::string id_;
+        std::string name_;
+        network_type type_;
     public:
         /**
           * Creates a network information entry with specified

@@ -1,32 +1,21 @@
+#include <QWidget>
 
-#include <QtGui/QMainWindow>
-//#include <QSystemDeviceInfo>
-#include<QLabel>
-#include<QtGui>
-#include <QSystemNetworkInfo>
-#include<time.h>
-#include<QWidget>
-QTM_USE_NAMESPACE
-
+/**
+  * The main window class.
+  * Kept here because Qt Mobility needs Qt facilities to operate.
+  *
+  * TODO: use qt mobility...
+  */
 class bat: public QWidget
 {
     Q_OBJECT
 public:
-
-    bat(QWidget *parent = 0)
-{	
-	setupGeneral();
-}
-    int convert(int num);
-
+    bat(QWidget *parent = 0) {
+        main_sequence();
+    }
 private:
-
-    QLabel *status;
-    void setupGeneral();
-    void compare();
-
-    QSystemNetworkInfo *deviceInfo;
-private slots:
-    void signalStrengthChanged(QSystemNetworkInfo::NetworkMode, int);
-
+    /**
+      * Main signalstren operation sequence: scan-measure-evaluate-modify
+      */
+    void main_sequence();
 };

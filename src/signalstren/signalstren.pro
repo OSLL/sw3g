@@ -31,5 +31,8 @@ HEADERS += bat.h \
     impl/measurers.h \
     impl/umts/umts_measurer.h \
     core/series.h \
-    impl/wlan/wlan_measurer.h
+    impl/wlan/wlan_measurer.h \
+    core/evaluator.h \
+    impl/eval/single/signal_strength_evaluator.h \
+    impl/eval/multi/nff_eval.h
 SOURCES += bat.cpp main.cpp
