@@ -14,5 +14,22 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += bat.h
+HEADERS += bat.h \
+    util.h \
+    core/scanner.h \
+    core/scanner.h \
+    core/network.h \
+    impl/umts/umts_scanner.h \
+    impl/wlan/wlan_scanner.h \
+    impl/scanners.h \
+    core/net_info.h \
+    core/parameter.h \
+    core/unit.h \
+    impl/units.h \
+    impl/parameters.h \
+    core/measurer.h \
+    impl/measurers.h \
+    impl/umts/umts_measurer.h \
+    core/series.h \
+    impl/wlan/wlan_measurer.h
 SOURCES += bat.cpp main.cpp

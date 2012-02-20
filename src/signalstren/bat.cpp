@@ -7,7 +7,15 @@
 #include <signal.h>
 #include <string.h>
 #include <QMessageBox>
+
+#include "core/scanner.h"
+#include "core/net_info.h"
+#include "impl/scanners.h"
+#include "impl/units.h"
+
 using namespace std;
+using namespace fine;
+using namespace fine::impl;
 
 int i=0,j=0,num=0,count1=0;
 char name[10][30],sig[10][15],ch,str[15];
@@ -15,6 +23,24 @@ char name[10][30],sig[10][15],ch,str[15];
 FILE *fp;
 void bat::setupGeneral()
 {
+    // detecting networks and updating net_info
+    set<network> detected;
+    for (network_type net_type = FIRST; net_type != LAST; ++net_type) {
+        scanner &scan = scanners::instance().get(net_type);
+        set<network> detected_for_type = scan.scan();
+        if (!detected_for_type.empty()) {
+            detected.insert(detected_for_type.begin(), detected_for_type.end());
+        }
+    }
+    cout << "=============== before update ================" << "\n";
+    net_info::instance().dump();
+    net_info::instance().update(detected);
+    cout << "\n\n=============== after update ================" << "\n";
+    net_info::instance().dump();
+
+    exit(0);
+    // old code:
+
     status=new QLabel("");
 
     QGridLayout *lay =new QGridLayout;
@@ -93,35 +119,9 @@ void bat::compare()
 
     }
 }
-int bat::convert(int num)
-{
-    char string[100];
-    int n=0;
-    strcpy(string,"grep -w '\\");
-    char ch1[6];
-    sprintf(ch1,"%d",num);
-    //cout<<"jjj"<<ch1<<"\n";
-    strcat(string,ch1);
-    strcat(string,"' converter.txt > value.out");
-    system(string);
-    FILE *f1;
-    char str1[100];
 
-    f1 = fopen("value.out","r");
-    fscanf(f1,"%[^\n]s",str1);
-    // cout<<"str"<<str1;
-    int i=0,j=0;
-    while(str1[i]!='='&&str1[i]!='\0')
-        i++;
-    i++;
-    i++;
-    while(str1[i]!='\0')
-    {   //cout<<"sdhjsd"<<str1[i];
-        ch1[j]=str1[i];
-        j++;i++;
-    }
-    ch1[j]='\0';
-    n = atoi(ch1);
-    fclose(f1);
-    return n;
+int bat::convert(int num) {
+    // todo get rid of this...
+    return -1;
 }
+

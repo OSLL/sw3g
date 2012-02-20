@@ -1,0 +1,135 @@
+#ifndef NET_INFO_H
+#define NET_INFO_H
+
+#include <set>
+#include <map>
+#include <vector>
+#include <algorithm>
+
+#include "core/network.h"
+#include "core/parameter.h"
+#include "core/series.h"
+
+// !!! TODO remove this after testing
+#include "impl/parameters.h"
+// end !!!
+
+#include "impl/measurers.h"
+
+namespace fine {
+    using namespace std;
+
+    /**
+      * Stores Network Information: which networks are available,
+      * what parameters are measured for each, what parameter
+      * values are.
+      *
+      * TODO: Stored information is persisted across different runs of the
+      * `signalstren' application.
+      */
+    class net_info {
+    private:
+        net_info() {
+            // TODO: read this info from somewhere
+            watched_params_.insert(impl::parameters::SIGNAL_STRENGTH);
+
+            // TODO: read information from persisted storage
+            vector<series> v1;
+            series s1(impl::parameters::SIGNAL_STRENGTH);
+            s1.push(53); // %
+            s1.push(67); // %
+            v1.push_back(s1);
+            parameter_values_[network("00:50:18:64:1E:88", "__ROUTER__", WLAN)] = v1;
+
+            vector<series> v2;
+            series s2(impl::parameters::SIGNAL_STRENGTH);
+            s2.push(87); // %
+            s2.push(75); // %
+            s2.push(32); // %
+            v2.push_back(s2);
+            parameter_values_[network("00:18:E7:8C:B6:D2", "SJCE_STUDENT", WLAN)] = v2;
+        }
+
+        ~net_info() {
+            // TODO: persist network information
+        }
+
+        net_info(const net_info&) {
+        }
+
+        net_info& operator=(net_info&) {
+        }
+
+        map< network,vector<series> > parameter_values_;
+        set<parameter> watched_params_;
+    public:
+        void dump() {
+            for (map< network, vector<series> >::iterator i = parameter_values_.begin(); i != parameter_values_.end(); ++i) {
+                pair<network, vector<series> > elem = *i;
+                network &net = elem.first;
+                cout << "NETWORK - " << net.id() << "\n" <<
+                        net.name() << "\n" << net.type() << "\n" <<
+                        "    SERIES:\n";
+                vector<series> &vec = elem.second;
+                for (vector<series>::iterator j = vec.begin(); j != vec.end(); ++j) {
+                    series &ser = *j;
+                    cout << "        (series for param " << ser.for_param().name() <<
+                            "[measured in " << ser.for_param().base_unit().name() << "]" << "): \n";
+                    cout << "            series size= " << ser.size() << ", mean=" << ser.mean() << "," <<
+                            "variance=" << ser.variance() << ",stdev=" << ser.stdev() << ",last_value=" <<
+                            ser.peek() << "\n\n";
+                }
+                cout << "\n\n\n";
+            }
+        }
+
+        static net_info& instance() {
+            static net_info the_instance;
+            return the_instance;
+        }
+
+        /**
+          * This method is periodically called to notify net_info about currently present networks.
+          * All information about networks not in the @p nets list is erased.
+          * For each network in the @p nets list, measurements of its parameters is performed.
+          *
+          * @param nets - all detected networks
+          */
+        void update(set<network> &nets) {
+            // remove measurements for no longer existing networks
+            for(map< network, vector<series> >::iterator iter = parameter_values_.begin();
+                iter != parameter_values_.end(); ) {
+                pair< network, vector<series> > val = *iter;
+                if (nets.find(val.first) == nets.end()) {
+                    // network does not exist
+                    parameter_values_.erase(iter++);
+                } else {
+                    ++iter;
+                }
+            }
+
+            for (set<network>::iterator i = nets.begin(); i != nets.end(); ++i) {
+                const network& net = *i;
+                const measurer &meas = impl::measurers::instance().get(net.type());
+                vector<series> &svec = parameter_values_[net];
+
+                if (svec.size() > 0) {
+                    for (vector<series>::iterator j = svec.begin(); j != svec.end(); ++j) {
+                        const parameter &param = (*j).for_param();
+                        (*j).push(meas.value(net, param));
+                    }
+                } else {
+                    // no previous measurements - add new series and store values there
+                    for (set<parameter>::iterator k = watched_params_.begin(); k != watched_params_.end(); ++k) {
+                        parameter param = *k;
+                        series ser(param);
+                        ser.push(meas.value(net, param));
+                        svec.push_back(ser);
+                    }
+                }
+            }
+        }
+    };
+}
+
+#endif // NET_INFO_H
