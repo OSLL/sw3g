@@ -21,18 +21,21 @@ HEADERS += bat.h \
     core/network.h \
     impl/umts/umts_scanner.h \
     impl/wlan/wlan_scanner.h \
-    impl/scanners.h \
     core/net_info.h \
     core/parameter.h \
     core/unit.h \
     impl/units.h \
     impl/parameters.h \
     core/measurer.h \
-    impl/measurers.h \
     impl/umts/umts_measurer.h \
     core/series.h \
     impl/wlan/wlan_measurer.h \
     core/evaluator.h \
     impl/eval/single/signal_strength_evaluator.h \
-    impl/eval/multi/nff_eval.h
+    impl/eval/multi/nff_eval.h \
+    core/registry.h \
+    impl/umts/reg.h \
+    core/net_type_registries.h \
+    impl/wlan/reg.h \
+    impl/config.h
 SOURCES += bat.cpp main.cpp

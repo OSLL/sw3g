@@ -40,20 +40,6 @@ namespace fine {
           */
         virtual const unit &measurement_unit() const = 0;
     };
-
-    /**
-      * Manages measurer instances for different types of networks.
-      * There might be only one instance per network.
-      */
-    /*abstract*/ class measurer_instance {
-    public:
-        /**
-          * Returns measurer for a particular network type.
-          * @param type - network type
-          * @return measurer for network of type @p type
-          */
-        virtual measurer& get(network_type type) = 0;
-    };
 }
 
 #endif // MEASURER_H

@@ -4,10 +4,10 @@
 
 #include "core/scanner.h"
 #include "core/evaluator.h"
+#include "core/network.h"
 #include "core/net_info.h"
-#include "impl/scanners.h"
-#include "impl/units.h"
-#include "impl/eval/single/signal_strength_evaluator.h"
+
+#include "impl/config.h"
 
 using namespace std;
 using namespace fine;
@@ -17,6 +17,11 @@ void bat::main_sequence() {
     // detecting networks and updating net_info
     set<network> detected;
     for (network_type net_type = FIRST; net_type != LAST; ++net_type) {
+        if (!scanners::instance().is_registered(net_type)) {
+            cout << "WARNING: network type " << net_type << " (" << network_type_prefixes[net_type] <<
+                    ") not registered" << "\n";
+        }
+
         scanner &scan = scanners::instance().get(net_type);
         set<network> detected_for_type = scan.scan();
         if (!detected_for_type.empty()) {
@@ -37,7 +42,7 @@ void bat::main_sequence() {
     for_best_signal.push_evaluator(eval);
     for_best_signal.push_networks(detected);
     const network &winner = for_best_signal.winner();
-    cout << "The winner is: " << winner.id() << " - " << winner.name() << " (type " << winner.type() << ") \n";
+    cout << "The winner is: " << winner.id() << " - " << winner.name() << " (type " << network_type_prefixes[winner.type()] << ") \n";
 
     // writing the results to file
     ofstream winner_stream;

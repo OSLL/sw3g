@@ -16,7 +16,7 @@ namespace fine {
             std::set<network> scan() {
                 std::set<network> result;
                 //if (exec("ifconfig -s | grep gprs0").length() > 0) {
-                    //result.insert(network("25520", "MegaFon", UMTS));
+                    result.insert(network("25520", "MegaFon", UMTS));
                 //}
 
                 return result;

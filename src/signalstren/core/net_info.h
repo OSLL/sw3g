@@ -9,12 +9,11 @@
 #include "core/network.h"
 #include "core/parameter.h"
 #include "core/series.h"
+#include "core/net_type_registries.h"
 
 // !!! TODO remove this after testing
 #include "impl/parameters.h"
 // end !!!
-
-#include "impl/measurers.h"
 
 namespace fine {
     using namespace std;
@@ -143,7 +142,7 @@ namespace fine {
 
             for (set<network>::iterator i = nets.begin(); i != nets.end(); ++i) {
                 const network& net = *i;
-                const measurer &meas = impl::measurers::instance().get(net.type());
+                const measurer &meas = measurers::instance().get(net.type());
                 vector<series> &svec = parameter_values_[net];
 
                 if (svec.size() > 0) {

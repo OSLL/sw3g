@@ -17,7 +17,7 @@ namespace fine {
             map<string, double> MEASUREMENTS_;
         public:
             umts_measurer() {
-                MEASUREMENTS_["MegaFon"] = -35;
+                MEASUREMENTS_["MegaFon"] = -25.5;
             }
         protected:
             double value_internal(const network &net, const parameter &param) const {

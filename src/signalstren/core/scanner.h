@@ -23,20 +23,6 @@ namespace fine {
           */
         virtual std::set<network> scan() = 0;
     };
-
-    /**
-      * Manages scanner instances for different types of networks.
-      * There might be only one instance per network.
-      */
-    /*abstract*/ class scanner_instance {
-    public:
-        /**
-          * Returns scanner for a particular network type.
-          * @param type - network type
-          * @return scanner for network of type @p type
-          */
-        virtual scanner& get(network_type type) = 0;
-    };
 }
 
 #endif // SCANNER_H
