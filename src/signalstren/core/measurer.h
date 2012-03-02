@@ -22,8 +22,8 @@ namespace fine {
           */
         double value(const network &net, const parameter &param) const {
             double value_in_measurer_units = value_internal(net, param);
-            if (measurement_unit().is_convertible_to(param.base_unit())) {
-                return measurement_unit().convert_to(param.base_unit(), value_in_measurer_units);
+            if (measurement_unit(param).is_convertible_to(param.base_unit())) {
+                return measurement_unit(param).convert_to(param.base_unit(), value_in_measurer_units);
             } else {
                 return std::numeric_limits<double>::quiet_NaN();
             }
@@ -37,8 +37,9 @@ namespace fine {
 
         /**
           * Returns the measurement unit used by the measurer.
+          * @param param - the parameter for which the unit is returned
           */
-        virtual const unit &measurement_unit() const = 0;
+        virtual const unit &measurement_unit(const parameter &param) const = 0;
     };
 }
 

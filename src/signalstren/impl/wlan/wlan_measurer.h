@@ -28,8 +28,10 @@ namespace fine {
                 }
             }
 
-            const unit &measurement_unit() const {
-                return units::UNIT_POWER_IN_dBm;
+            const unit &measurement_unit(const parameter &param) const {
+                if (param == parameters::SIGNAL_STRENGTH) {
+                    return units::UNIT_POWER_IN_dBm;
+                }
             }
         };
     }
