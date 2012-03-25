@@ -6,7 +6,7 @@
   */
 
 #include "core/network.h"
-#include "core/net_type_registries.h"
+#include "core/registries.h"
 
 #include "wlan_measurer.h"
 #include "wlan_scanner.h"

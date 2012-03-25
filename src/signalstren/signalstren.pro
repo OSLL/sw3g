@@ -35,7 +35,8 @@ HEADERS += bat.h \
     impl/eval/multi/nff_eval.h \
     core/registry.h \
     impl/umts/reg.h \
-    core/net_type_registries.h \
     impl/wlan/reg.h \
-    impl/config.h
+    impl/config.h \
+    core/registries.h \
+    impl/eval/single/reg.h
 SOURCES += bat.cpp main.cpp

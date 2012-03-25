@@ -3,6 +3,7 @@
 
 #include "core/measurer.h"
 #include "core/scanner.h"
+#include "core/evaluator.h"
 #include "core/registry.h"
 
 namespace fine {
@@ -19,6 +20,13 @@ namespace fine {
       * of a given type. One network type <-> one scanner
       */
     class scanners: public registry<scanner> {
+    };
+
+    /**
+      * A global list of evaluators, which rank networks
+      * according to some criteria.
+      */
+    class evaluators: public global_list<evaluator> {
     };
 }
 

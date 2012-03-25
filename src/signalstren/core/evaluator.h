@@ -84,8 +84,17 @@ namespace fine {
           * Adds evaluator to rank networks.
           * @param eval - evaluator
           */
-        void push_evaluator(evaluator *eval) {
-            evaluators_.push_back(shared_ptr<evaluator>(eval));
+        void push_evaluator(shared_ptr<evaluator> eval) {
+            evaluators_.push_back(eval);
+        }
+
+        /**
+          * Determines whether the election can run
+          * (there must be at leas 1 evaluator and at least 1 network
+          * to run election.)
+          */
+        bool can_run() {
+            return evaluators_.size() > 0 && networks_.size() > 0;
         }
 
         /**

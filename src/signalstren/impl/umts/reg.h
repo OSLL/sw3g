@@ -6,7 +6,7 @@
   */
 
 #include "core/network.h"
-#include "core/net_type_registries.h"
+#include "core/registries.h"
 
 #include "umts_measurer.h"
 #include "umts_scanner.h"

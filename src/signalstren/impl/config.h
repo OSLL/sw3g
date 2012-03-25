@@ -9,7 +9,7 @@
 #include "impl/units.h"
 
 // supported evaluators
-#include "impl/eval/single/signal_strength_evaluator.h"
+#include "impl/eval/single/reg.h"
 
 // supported network types:
 #include "impl/umts/reg.h"

@@ -9,7 +9,8 @@
 #include "core/network.h"
 #include "core/parameter.h"
 #include "core/series.h"
-#include "core/net_type_registries.h"
+
+#include "core/registries.h"
 
 // !!! TODO remove this after testing
 #include "impl/parameters.h"
