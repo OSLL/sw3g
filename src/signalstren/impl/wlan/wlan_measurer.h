@@ -23,8 +23,13 @@ namespace fine {
             }
         protected:
             double value_internal(const network &net, const parameter &param) const {
+                // TODO perform real measurement
                 if (param == parameters::SIGNAL_STRENGTH) {
-                    return MEASUREMENTS_.at(net.name());
+                    if (MEASUREMENTS_.find(net.name()) == MEASUREMENTS_.end()) {
+                        return -130;
+                    } else {
+                        return MEASUREMENTS_.at(net.name());
+                    }
                 }
             }
 
