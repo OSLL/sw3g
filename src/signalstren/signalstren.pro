@@ -9,7 +9,6 @@ maemo5 {
 }
 MOBILITY = systeminfo
 TEMPLATE = app
-TARGET = 
 DEPENDPATH += .
 INCLUDEPATH += .
 
@@ -40,3 +39,19 @@ HEADERS += bat.h \
     core/registries.h \
     impl/eval/single/reg.h
 SOURCES += bat.cpp main.cpp
+
+CONFIG(debug, debug|release){
+    DESTDIR = bin/debug
+    OBJECTS_DIR = bin/debug
+    TARGET=signalstren
+}
+
+CONFIG(release, debug|release){
+    DESTDIR = bin/release
+    OBJECTS_DIR = bin/release
+    TARGET=signalstren
+}
+
+scripts.path = $${DESTDIR}/script
+scripts.files += script/getnetdata.sh
+INSTALLS += scripts

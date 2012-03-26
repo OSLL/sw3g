@@ -62,6 +62,7 @@ void bat::main_sequence() {
                          winner.id() << " " <<
                          winner.name() << endl;
     } else {
+        winner_stream << "best=none" << endl;
         cout << "No networks detected :-(" << endl;
     }
 
@@ -83,6 +84,7 @@ void bat::main_sequence() {
                              winner.name() << endl;
         } else {
             cout << "No networks detected :-(" << endl;
+            winner_stream << "best[" << network_type_prefixes[net_type] << "]=none" << endl;
         }
     }
     winner_stream.close();
