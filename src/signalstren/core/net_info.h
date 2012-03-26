@@ -47,7 +47,7 @@ namespace fine {
             s2.push(75); // %
             s2.push(32); // %
             v2.push_back(s2);
-            parameter_values_[network("00:18:E7:8C:B6:D2", "SJCE_STUDENT", WLAN)] = v2;
+            parameter_values_[network("00:18:E7:8C:B6:D5", "SJCE_STUDENT", WLAN)] = v2;
         }
 
         ~net_info() {
