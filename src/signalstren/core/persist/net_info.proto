@@ -1,0 +1,43 @@
+option optimize_for = LITE_RUNTIME;
+	
+// Network identification information
+message m_network {
+  // Network id
+  required string id = 1;
+  // Human-readable Network Name
+  required string name = 2;
+  enum m_network_type {
+    FIRST = 0;
+    WLAN = 0;
+    UMTS = 1;
+    LAST = 2;
+  }
+  // Network type
+  required m_network_type type = 3;
+  // Is network active?
+  required bool is_active = 4;
+  
+  repeated m_series all_series = 5;
+}
+
+// Represents a series of values of some parameter.
+message m_series {
+  // Name of the measured parameter
+  required string parameter = 1;
+  
+  // Count of processed measures
+  required int32 size = 2;
+  // Last processed measure
+  required double last_value = 3;
+  
+  // Next 4 variables are for iterative calculation of mean and variance:
+  required double old_m = 4;
+  required double old_s = 5;
+  required double new_m = 6;
+  required double new_s = 7;
+}
+
+// The whole persisted state is here
+message m_netinfo {
+  repeated m_network all_networks = 1;
+}

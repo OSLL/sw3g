@@ -6,12 +6,15 @@
 #include <vector>
 #include <algorithm>
 #include <boost/noncopyable.hpp>
+#include <iostream>
+#include <fstream>
 
 #include "core/network.h"
 #include "core/parameter.h"
 #include "core/series.h"
-
 #include "core/registries.h"
+
+#include "core/persist/net_info.pb.h"
 
 // TODO remove this when a real list of parameters will be read dynamically
 // instead of being constant
@@ -19,41 +22,75 @@
 
 namespace fine {
     using namespace std;
+    using namespace google::protobuf;
 
     /**
       * Stores Network Information: which networks are available,
       * what parameters are measured for each, what parameter
       * values are.
-      *
-      * TODO: Stored information is persisted across different runs of the
-      * `signalstren' application.
       */
     class net_info: public boost::noncopyable {
     private:
-        net_info() {
-            // TODO: read this info from somewhere
+        /**
+          * Persistent storage filename
+          */
+        const static string NETINFO_FILENAME;
+
+        void initialize_params() {
             watched_params_.insert(PARAM(impl::parameters::SIGNAL_STRENGTH));
-
-            // TODO: read information from persisted storage
-            vector<series> v1;
-            series s1(PARAM(impl::parameters::SIGNAL_STRENGTH));
-            s1.push(53); // %
-            s1.push(67); // %
-            v1.push_back(s1);
-            parameter_values_[network("00:50:18:64:1E:88", "__ROUTER__", WLAN, false)] = v1;
-
-            vector<series> v2;
-            series s2(PARAM(impl::parameters::SIGNAL_STRENGTH));
-            s2.push(87); // %
-            s2.push(75); // %
-            s2.push(32); // %
-            v2.push_back(s2);
-            parameter_values_[network("00:18:E7:8C:B6:D5", "SJCE_STUDENT", WLAN, true)] = v2;
+            // TODO more intelligent parameter detection???
         }
 
-        ~net_info() {
-            // TODO: persist network information
-        }
+        net_info() {
+            initialize_params();
+
+            filebuf buf;
+            buf.open(NETINFO_FILENAME.c_str(), ios_base::in);
+            // check if we found the file
+            if (!buf.is_open())
+                return;
+
+            // read all file data into array
+            size_t size = buf.pubseekoff(0, ios_base::end, ios_base::in);
+            buf.pubseekpos(0, ios_base::in);
+            char *data_buffer = new char[size];
+            buf.sgetn(data_buffer, size);
+
+            m_netinfo m_info;
+            // check if the data represents a correct netinfo state
+            if (!m_info.ParseFromArray(data_buffer, size))
+                return;
+
+            for (RepeatedPtrField<m_network>::const_iterator i = m_info.all_networks().begin();
+                 i != m_info.all_networks().end(); ++i) {
+                const m_network &m_net = *i;
+                network net(m_net.id(), m_net.name(), (network_type) m_net.type(), m_net.is_active());
+                networks_.insert(net);
+
+                vector<series> series_for_net;
+                for (RepeatedPtrField<m_series>::const_iterator j = m_net.all_series().begin();
+                     j != m_net.all_series().end(); ++j) {
+                    const m_series &m_ser = *j;
+
+                    parameter &param = PARAM(m_ser.parameter());
+                    watched_params_.insert(param);
+
+                    series ser(param);
+                    ser.count_ = m_ser.size();
+                    ser.current_ = m_ser.last_value();
+                    ser.new_m_ = m_ser.new_m();
+                    ser.old_m_ = m_ser.old_m();
+                    ser.new_s_ = m_ser.new_s();
+                    ser.old_s_ = m_ser.old_s();
+
+                    series_for_net.push_back(ser);
+                }
+
+                parameter_values_[net] = series_for_net;
+            }
+
+            delete[] data_buffer;
+        }        
 
         map< network,vector<series> > parameter_values_;
         set<parameter> watched_params_;
@@ -61,12 +98,11 @@ namespace fine {
     public:
         void dump() {
             for (map< network, vector<series> >::iterator i = parameter_values_.begin(); i != parameter_values_.end(); ++i) {
-                pair<network, vector<series> > elem = *i;
-                network &net = elem.first;
+                const network &net = i->first;
                 cout << "NETWORK - " << net.id() << "\n" <<
                         net.name() << "\n" << net.type() << "\n" <<
                         "    SERIES:\n";
-                vector<series> &vec = elem.second;
+                vector<series> &vec = i->second;
                 for (vector<series>::iterator j = vec.begin(); j != vec.end(); ++j) {
                     series &ser = *j;
                     cout << "        (series for param " << ser.for_param().name() <<
@@ -77,6 +113,44 @@ namespace fine {
                 }
                 cout << "\n\n";
             }
+        }
+
+        ~net_info() {
+            m_netinfo m_info;
+
+            for (map< network, vector<series> >::iterator i = parameter_values_.begin();
+                 i != parameter_values_.end(); ++i) {
+                m_network *m_net = m_info.add_all_networks();
+
+                const network &net = i->first;
+                m_net->set_id(net.id());
+                m_net->set_is_active(net.is_active());
+                m_net->set_name(net.name());
+                m_net->set_type((m_network_m_network_type) net.type());
+
+                vector<series> &ser = i->second;
+
+                for (vector<series>::iterator j = ser.begin(); j != ser.end(); ++j) {
+                    m_series *m_ser = m_net->add_all_series();
+
+                    m_ser->set_last_value(j->peek());
+                    m_ser->set_size(j->size());
+                    m_ser->set_new_m(j->new_m_);
+                    m_ser->set_old_m(j->old_m_);
+                    m_ser->set_new_s(j->new_s_);
+                    m_ser->set_old_s(j->old_s_);
+
+                    m_ser->set_parameter(j->for_param().name());
+                }
+            }
+
+            ofstream file_stream;
+            file_stream.open(NETINFO_FILENAME.c_str());
+            string target;
+            m_info.SerializeToString(&target);
+
+            file_stream << target;
+            file_stream.close();
         }
 
         static net_info& instance() {
@@ -159,6 +233,8 @@ namespace fine {
             }
         }
     };
+
+    const string net_info::NETINFO_FILENAME("/tmp/.fine-netinfo");
 }
 
 #endif // NET_INFO_H

@@ -38,8 +38,10 @@ HEADERS += bat.h \
     impl/eval/single/reg.h \
     impl/unit/signal.h \
     impl/param/signal.h \
-    impl/param/reg.h
-SOURCES += bat.cpp main.cpp
+    impl/param/reg.h \
+    core/persist/net_info.pb.h
+SOURCES += bat.cpp main.cpp \
+    core/persist/net_info.pb.cc
 
 CONFIG(debug, debug|release){
     DESTDIR = bin/debug
@@ -58,7 +60,10 @@ scripts.files = script/*.sh
 
 INSTALLS += scripts
 
+LIBS += -lprotobuf-lite
+
 OTHER_FILES += \
     script/wlan_measure.sh \
     script/wlan_scan.sh \
-    script/wlan_active_net.sh
+    script/wlan_active_net.sh \
+    core/persist/net_info.proto

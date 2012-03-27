@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include "core/parameter.h"
+#include "core/net_info.h"
 
 namespace fine {
     /**
@@ -114,6 +115,8 @@ namespace fine {
         bool empty() const {
             return (count_ > 0);
         }
+
+        friend class net_info;
     };
 }
 
