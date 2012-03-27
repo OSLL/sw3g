@@ -52,6 +52,12 @@ CONFIG(release, debug|release){
     TARGET=signalstren
 }
 
-scripts.path = $${DESTDIR}/script
-scripts.files += script/getnetdata.sh
+scripts.path = $${DESTDIR}/script/
+scripts.files = script/*.sh
+
 INSTALLS += scripts
+
+OTHER_FILES += \
+    script/wlan_measure.sh \
+    script/wlan_scan.sh \
+    script/wlan_active_net.sh
