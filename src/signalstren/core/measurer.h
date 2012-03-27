@@ -34,7 +34,7 @@ namespace fine {
           * Correspondence between network parameters and units of measurement
           * for them which are used by the measurer.
           */
-        map<parameter, unit> param_to_unit_;
+        map< parameter, shared_ptr<const unit> > param_to_unit_;
     protected:
         /**
           * Returns the current value of the parameter @p param of network @p net
@@ -50,7 +50,7 @@ namespace fine {
             if (param_to_unit_.find(param) == param_to_unit_.end()) {
                 throw logic_error("measurement unit for parameter not registered");
             }
-            return param_to_unit_.at(param);
+            return *(param_to_unit_.at(param));
         }
 
         /**
@@ -59,7 +59,7 @@ namespace fine {
           * @param u - unit which is used by the measurer for values of @p param
           */
         void register_unit(const parameter &param, const unit &u) {
-            param_to_unit_.insert(make_pair(param, u));
+            param_to_unit_.insert(make_pair(param, shared_ptr<const unit>(&u)));
         }
     };
 }

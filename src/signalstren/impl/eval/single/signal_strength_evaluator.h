@@ -2,8 +2,8 @@
 #define SIGNAL_STRENGTH_EVALUATOR_H
 
 #include "core/evaluator.h"
-#include "impl/parameters.h"
 #include "core/net_info.h"
+#include "core/registries.h"
 
 namespace fine {
     namespace impl {
@@ -19,7 +19,7 @@ namespace fine {
               */
             double rank(const network &net) {
                 series ss_series = net_info::instance().param_values(
-                            net, parameters::SIGNAL_STRENGTH);
+                            net, PARAM(parameters::SIGNAL_STRENGTH));
                 return ss_series.mean();
             }
 

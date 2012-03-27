@@ -26,7 +26,7 @@ namespace fine {
         public:
             set<network> scan() {
                 // invalidate the measurement cache
-                wlan_measurer &wm = dynamic_cast<wlan_measurer&>(measurers::instance().get(WLAN));
+                wlan_measurer &wm = dynamic_cast<wlan_measurer&>(MEASURER(WLAN));
                 wm.cache_invalid_ = true;
 
                 set<network> result;

@@ -5,6 +5,7 @@
 #include <set>
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include <boost/noncopyable.hpp>
 #include <typeinfo>
 
 #include "core/network.h"
@@ -17,29 +18,20 @@ namespace fine {
       * Defines a registry of objects.
       * There may be only one object per network_type.
       */
-    template<typename T>
-    class registry {
+    template<typename K, typename T>
+    class registry: boost::noncopyable {
     private:
-        map< network_type, shared_ptr<T> > objects_;
-
-        registry<T>() {
-        }
-
-        registry<T>(const registry<T>&) {
-        }
-
-        registry<T>& operator=(registry<T>&) {
-        }
+        map< K, shared_ptr<T> > objects_;
     public:
         /**
           * Associates the specified copy-constructible object
-          * with a network_type.
+          * with a key.
           * If association already exists, the operation silently fails.
           *
-          * @param type - network type
+          * @param type - key
           * @param object - pointer to the object
           */
-        void put(network_type type, T* object) {
+        void put(K type, T* object) {
             if (!is_registered(type)) {
                 // does not yet exist, add item to the map
                 objects_.insert(make_pair(type, shared_ptr<T>(object)));
@@ -51,26 +43,26 @@ namespace fine {
           * @param type - network type
           * @return object for network of type @p type
           */
-        T& get(network_type type) {
-            pair< network_type, shared_ptr<T> > found = *(objects_.find(type));
+        T& get(K type) {
+            pair< K, shared_ptr<T> > found = *(objects_.find(type));
             return *(found.second);
         }
 
         /**
           * Tells whether an object is registered for the specified
           * network type.
-          * @param type - network type
+          * @param type - key
           * @return true if registration exists
           */
-        bool is_registered(network_type type) {
+        bool is_registered(K type) {
             return objects_.count(type) > 0;
         }
 
         /**
           * Returns a shared instance of the registry.
           */
-        static registry<T>& instance() {
-            static registry<T> the_instance;
+        static registry<K, T>& instance() {
+            static registry<K, T> the_instance;
             return the_instance;
         }
     };
@@ -80,19 +72,10 @@ namespace fine {
       * the same type, T.
       */
     template<typename T>
-    class global_list {
+    class global_list: public boost::noncopyable {
     private:
         vector< shared_ptr<T> > objects_;
         set<string> type_ids_;
-
-        global_list<T>() {
-        }
-
-        global_list<T>(const global_list<T>&) {
-        }
-
-        global_list<T>& operator=(global_list<T>&) {
-        }
     public:
         /**
           * Adds a specified object to the list.

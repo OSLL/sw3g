@@ -23,8 +23,6 @@ HEADERS += bat.h \
     core/net_info.h \
     core/parameter.h \
     core/unit.h \
-    impl/units.h \
-    impl/parameters.h \
     core/measurer.h \
     impl/umts/umts_measurer.h \
     core/series.h \
@@ -37,7 +35,10 @@ HEADERS += bat.h \
     impl/wlan/reg.h \
     impl/config.h \
     core/registries.h \
-    impl/eval/single/reg.h
+    impl/eval/single/reg.h \
+    impl/unit/signal.h \
+    impl/param/signal.h \
+    impl/param/reg.h
 SOURCES += bat.cpp main.cpp
 
 CONFIG(debug, debug|release){

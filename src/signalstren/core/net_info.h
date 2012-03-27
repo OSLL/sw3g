@@ -13,9 +13,9 @@
 
 #include "core/registries.h"
 
-// !!! TODO remove this after testing
-#include "impl/parameters.h"
-// end !!!
+// TODO remove this when a real list of parameters will be read dynamically
+// instead of being constant
+#include "impl/param/reg.h"
 
 namespace fine {
     using namespace std;
@@ -32,18 +32,18 @@ namespace fine {
     private:
         net_info() {
             // TODO: read this info from somewhere
-            watched_params_.insert(impl::parameters::SIGNAL_STRENGTH);
+            watched_params_.insert(PARAM(impl::parameters::SIGNAL_STRENGTH));
 
             // TODO: read information from persisted storage
             vector<series> v1;
-            series s1(impl::parameters::SIGNAL_STRENGTH);
+            series s1(PARAM(impl::parameters::SIGNAL_STRENGTH));
             s1.push(53); // %
             s1.push(67); // %
             v1.push_back(s1);
             parameter_values_[network("00:50:18:64:1E:88", "__ROUTER__", WLAN, false)] = v1;
 
             vector<series> v2;
-            series s2(impl::parameters::SIGNAL_STRENGTH);
+            series s2(PARAM(impl::parameters::SIGNAL_STRENGTH));
             s2.push(87); // %
             s2.push(75); // %
             s2.push(32); // %
@@ -139,7 +139,7 @@ namespace fine {
 
             for (set<network>::iterator i = nets.begin(); i != nets.end(); ++i) {
                 const network& net = *i;
-                const measurer &meas = measurers::instance().get(net.type());
+                const measurer &meas = MEASURER(net.type());
                 vector<series> &svec = parameter_values_[net];
 
                 if (svec.size() > 0) {

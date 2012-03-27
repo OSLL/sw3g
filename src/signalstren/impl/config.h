@@ -5,15 +5,20 @@
   * Specifies compile-time configuration of the FINE framework.
   */
 
-// supported measurement units
-#include "impl/units.h"
+//// Supported parameters & measurement units
+// IMPORTANT: Static initialization of parameters and units must
+// occur before initialization of network types, because these
+// would likely internally register a <parameter->unit> map on
+// initialization.
+#include "impl/param/reg.h"
 
-// supported evaluators
+//// Supported evaluators
 #include "impl/eval/single/reg.h"
+// Add new new evaluators before this line
 
-// supported network types:
+//// Supported network types:
 #include "impl/umts/reg.h"
-
 #include "impl/wlan/reg.h"
+// Add new new network types before this line
 
 #endif // CONFIG_H

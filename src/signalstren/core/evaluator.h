@@ -82,22 +82,18 @@ namespace fine {
 
         /**
           * Adds networks to vote for.
+          * Active networks will be added to the front of the list,
+          * passive to the end.
           * @param nets - network list
           */
         void push_networks(const set<network> &nets) {
-            set<network> active_nets;
-            set<network> passive_nets;
-
             for (set<network>::iterator i = nets.begin(); i != nets.end(); ++i) {
                 if (i->is_active()) {
-                    active_nets.insert(*i);
+                    networks_.push_front(*i);
                 } else {
-                    passive_nets.insert(*i);
+                    networks_.push_back(*i);
                 }
             }
-
-            networks_.insert(networks_.begin(), active_nets.begin(), active_nets.end());
-            networks_.insert(networks_.end(), passive_nets.begin(), passive_nets.end());
         }
 
         /**

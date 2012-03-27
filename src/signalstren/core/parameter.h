@@ -11,6 +11,9 @@ namespace fine {
     /**
       * Defines a measurable network parameter, e.g. signal strength.
       * A parameter is immutable.
+      *
+      * Parameter is identified by its unique name; two parameters with
+      * the same name are supposed to be equal.
       */
     class parameter {
     private:
@@ -35,11 +38,11 @@ namespace fine {
         }
 
         bool operator==(const parameter &rhs) const {
-            return rhs.name_ == name_ && rhs.base_unit_ == base_unit_;
+            return rhs.name_ == name_;
         }
 
         bool operator<(const parameter &rhs) const {
-            return rhs.name_ < name_ || (rhs.name_ == name_ && rhs.base_unit_ < base_unit_);
+            return rhs.name_ < name_;
         }
 
         const string &name() const {

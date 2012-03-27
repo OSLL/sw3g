@@ -12,22 +12,62 @@ namespace fine {
       * parameters and average them over time. One network
       * type <-> one measurer
       */
-    class measurers: public registry<measurer> {
-    };
+    typedef registry<network_type, measurer> measurers;
 
     /**
       * A registry of scanners, which detect networks
       * of a given type. One network type <-> one scanner
       */
-    class scanners: public registry<scanner> {
-    };
+    typedef registry<network_type, scanner> scanners;
+
+    /**
+      * Registry of parameters. (Parameter name) <->
+      * <-> parameter instance
+      */
+    typedef registry<string, parameter> params;
+
+    /**
+      * Registry of units. Unit name <-> unit instance
+      */
+    typedef registry<string, unit> uns;
 
     /**
       * A global list of evaluators, which rank networks
       * according to some criteria.
       */
-    class evaluators: public global_list<evaluator> {
-    };
+    typedef global_list<evaluator> evaluators;
+
+    //// Common shorthands for calling to global registries
+    template <typename K, typename V>
+    V& elem_for(const K &key) {
+        return registry<K, V>::instance().get(key);
+    }
+
+    template <typename V>
+    V& elem_for(const network_type &type) {
+        return elem_for<network_type, V>(type);
+    }
+
+    template <typename V>
+    V& elem_for(const string &name) {
+        return elem_for<string, V>(name);
+    }
+
+    measurer &MEASURER(const network_type &type) {
+        return elem_for<measurer>(type);
+    }
+
+    scanner &SCANNER(const network_type &type) {
+        return elem_for<scanner>(type);
+    }
+
+    parameter &PARAM(const string &name) {
+        return elem_for<parameter>(name);
+    }
+
+    unit &UNIT(const string &name) {
+        return elem_for<unit>(name);
+    }
 }
 
 #endif // NET_TYPE_REGISTRIES_H

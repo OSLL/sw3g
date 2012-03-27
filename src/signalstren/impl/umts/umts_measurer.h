@@ -5,7 +5,9 @@
 #include <limits>
 
 #include "core/measurer.h"
-#include "impl/parameters.h"
+#include "core/registries.h"
+
+#include "impl/config.h"
 
 using namespace std;
 
@@ -21,11 +23,12 @@ namespace fine {
                 // TODO real measurement
                 MEASUREMENTS_["MegaFon"] = -25.5;
 
-                register_unit(parameters::SIGNAL_STRENGTH, units::UNIT_POWER_IN_PERCENTS);
+                register_unit(PARAM(parameters::SIGNAL_STRENGTH),
+                              UNIT(units::P_IN_dBm));
             }
         protected:
             double value_internal(const network &net, const parameter &param) const {
-                if (param == parameters::SIGNAL_STRENGTH) {
+                if (param == PARAM(parameters::SIGNAL_STRENGTH)) {
                     return MEASUREMENTS_.at(net.name());
                 }
                 // silently fail. since this is not a real measurer implementation,

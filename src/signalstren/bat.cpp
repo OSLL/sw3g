@@ -25,8 +25,7 @@ void bat::main_sequence() {
                     ") not registered" << "\n";
         }
 
-        scanner &scan = scanners::instance().get(net_type);
-        set<network> detected_for_type = scan.scan();
+        set<network> detected_for_type = SCANNER(net_type).scan();
         if (!detected_for_type.empty()) {
             detected.insert(detected_for_type.begin(), detected_for_type.end());
         }

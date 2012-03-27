@@ -1,36 +1,40 @@
-#ifndef UNITS_H
-#define UNITS_H
+#ifndef SIGNAL_H
+#define SIGNAL_H
 
-#include <map>
-#include <limits>
-
+#include <string>
 #include "core/unit.h"
-
-using namespace std;
 
 namespace fine {
     namespace impl {
+        /**
+          * Defines unit classes and names for measuring SIGNAL POWER
+          */
         namespace units {
             /**
-              * Power in %
+              * Power in % of maximum power
               */
-            static unit UNIT_POWER_IN_PERCENTS("Power (%)");
+            const string P_IN_PERCENTS = "Power (%)";
+            /**
+              * Power in dBm (decibels above milliwatt).
+              * dBm = 10 * log10(mW)
+              */
+            const string P_IN_dBm = "Power (dBm)";
 
             class power_in_dbm_unit: public unit {
             public:
                 power_in_dbm_unit():
-                    unit("Power (dBm)") {
+                    unit(P_IN_dBm) {
                 }
             protected:
                 bool is_convertible_to_internal(const unit &rhs) const {
-                    if (rhs == UNIT_POWER_IN_PERCENTS) {
+                    if (rhs.name() == P_IN_PERCENTS) {
                         return true;
                     }
                     return false;
                 }
 
                 double convert_to_internal(const unit &rhs, double value) const {
-                    if (rhs == UNIT_POWER_IN_PERCENTS) {
+                    if (rhs.name() == P_IN_PERCENTS) {
                         return convert(value);
                     }
                     throw logic_error("convert_to_internal called with invalid target unit");
@@ -52,14 +56,8 @@ namespace fine {
                     return value;
                 }
             };
-
-            /**
-              * Power in decibels above milliwatt.
-              * Convertible to power in %
-              */
-            static power_in_dbm_unit UNIT_POWER_IN_dBm;
         }
     }
 }
 
-#endif // UNITS_H
+#endif // SIGNAL_H
