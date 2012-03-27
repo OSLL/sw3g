@@ -10,7 +10,7 @@ class bat: public QWidget
 {
     Q_OBJECT
 public:
-    bat(QWidget *parent = 0) {
+    bat(QWidget * = NULL) {
         main_sequence();
     }
 private:

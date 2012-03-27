@@ -6,7 +6,7 @@
 int main(int argc,char *argv[])
 {
     QApplication app(argc,argv);
-    bat *b = new bat();
-    // b->show();
+    new bat();
+
     return app.exec();
 }

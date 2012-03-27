@@ -16,7 +16,7 @@
   * @return command result, or "ERROR" if could not execute the
   * command
   */
-std::string exec(char* cmd) {
+std::string exec(const char* cmd) {
     const int BUFFER_SIZE = 128;
 
     FILE* pipe = popen(cmd, "r");

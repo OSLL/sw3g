@@ -32,7 +32,7 @@ void bat::main_sequence() {
         }
 
         detected_by_type[net_type] = detected_for_type;
-    }    
+    }
     cout << "=============== before update ================" << "\n";
     net_info::instance().dump();
     net_info::instance().update(detected);
@@ -48,7 +48,7 @@ void bat::main_sequence() {
 
     // find overall winner
     vote overall_best(REL_THRESHOLD);
-    for (int i = 0; i < evaluators::instance().size(); ++i) {
+    for (size_t i = 0; i < evaluators::instance().size(); ++i) {
         overall_best.push_evaluator(evaluators::instance()[i]);
     }
     overall_best.push_networks(detected);
@@ -69,7 +69,7 @@ void bat::main_sequence() {
     // find winner for each network type
     for (network_type net_type = FIRST; net_type != LAST; ++net_type) {
         vote net_best(REL_THRESHOLD);
-        for (int i = 0; i < evaluators::instance().size(); ++i) {
+        for (size_t i = 0; i < evaluators::instance().size(); ++i) {
             net_best.push_evaluator(evaluators::instance()[i]);
         }
         net_best.push_networks(detected_by_type[net_type]);
