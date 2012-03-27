@@ -2,6 +2,7 @@
 #define UNITS_H
 
 #include <map>
+#include <limits>
 
 #include "core/unit.h"
 
@@ -25,12 +26,14 @@ namespace fine {
                     if (rhs == UNIT_POWER_IN_PERCENTS) {
                         return true;
                     }
+                    return false;
                 }
 
                 double convert_to_internal(const unit &rhs, double value) const {
                     if (rhs == UNIT_POWER_IN_PERCENTS) {
                         return convert(value);
                     }
+                    throw logic_error("convert_to_internal called with invalid target unit");
                 }
             private:
                 /**

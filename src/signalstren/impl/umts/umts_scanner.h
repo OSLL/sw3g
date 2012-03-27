@@ -7,16 +7,14 @@
 namespace fine {
     namespace impl {
         /**
-          * Scanner for UMTS networks. Currently detects only whether network
-          * is up or down, using ifconfig.
-          * Reports "----" instead of the real network id.
+          * Scanner for UMTS networks. Completely bogus for now.
           */
         class umts_scanner: public scanner {
         public:
             std::set<network> scan() {
                 std::set<network> result;
                 //if (exec("ifconfig -s | grep gprs0").length() > 0) {
-                    result.insert(network("25520", "MegaFon", UMTS));
+                    result.insert(network("25520", "MegaFon", UMTS, true));
                 //}
 
                 return result;

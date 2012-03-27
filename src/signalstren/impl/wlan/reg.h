@@ -8,8 +8,8 @@
 #include "core/network.h"
 #include "core/registries.h"
 
-#include "wlan_measurer.h"
 #include "wlan_scanner.h"
+#include "wlan_measurer.h"
 
 namespace fine {
     namespace impl {

@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <boost/noncopyable.hpp>
 
 #include "core/network.h"
 #include "core/parameter.h"
@@ -27,7 +28,7 @@ namespace fine {
       * TODO: Stored information is persisted across different runs of the
       * `signalstren' application.
       */
-    class net_info {
+    class net_info: public boost::noncopyable {
     private:
         net_info() {
             // TODO: read this info from somewhere
@@ -39,7 +40,7 @@ namespace fine {
             s1.push(53); // %
             s1.push(67); // %
             v1.push_back(s1);
-            parameter_values_[network("00:50:18:64:1E:88", "__ROUTER__", WLAN)] = v1;
+            parameter_values_[network("00:50:18:64:1E:88", "__ROUTER__", WLAN, false)] = v1;
 
             vector<series> v2;
             series s2(impl::parameters::SIGNAL_STRENGTH);
@@ -47,17 +48,11 @@ namespace fine {
             s2.push(75); // %
             s2.push(32); // %
             v2.push_back(s2);
-            parameter_values_[network("00:18:E7:8C:B6:D5", "SJCE_STUDENT", WLAN)] = v2;
+            parameter_values_[network("00:18:E7:8C:B6:D5", "SJCE_STUDENT", WLAN, true)] = v2;
         }
 
         ~net_info() {
             // TODO: persist network information
-        }
-
-        net_info(const net_info&) {
-        }
-
-        net_info& operator=(net_info&) {
         }
 
         map< network,vector<series> > parameter_values_;
@@ -101,6 +96,7 @@ namespace fine {
                     return *i;
                 }
             }
+            throw logic_error("no series found for (net,param)");
         }
 
         /**

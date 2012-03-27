@@ -2,11 +2,13 @@
 #define EVALUATOR_H
 
 #include <vector>
+#include <deque>
 #include <map>
 #include <set>
 #include <limits>
 #include <cmath>
 #include <boost/shared_ptr.hpp>
+#include <algorithm>
 
 #include "core/network.h"
 
@@ -46,7 +48,7 @@ namespace fine {
       */
     class vote {
     private:
-        vector<network> networks_;
+        deque<network> networks_;
         vector< shared_ptr<evaluator> > evaluators_;
 
         double rel_threshold_;
@@ -65,10 +67,16 @@ namespace fine {
 
         /**
           * Adds network to vote for.
+          * Currently active networks are added to the beginning of the list,
+          * and all other networks to the end.
           * @param net - network
           */
         void push_network(const network& net) {
-            networks_.push_back(net);
+            if (net.is_active()) {
+                networks_.push_front(net);
+            } else {
+                networks_.push_back(net);
+            }
         }
 
 
@@ -77,7 +85,19 @@ namespace fine {
           * @param nets - network list
           */
         void push_networks(const set<network> &nets) {
-            networks_.insert(networks_.end(), nets.begin(), nets.end());
+            set<network> active_nets;
+            set<network> passive_nets;
+
+            for (set<network>::iterator i = nets.begin(); i != nets.end(); ++i) {
+                if (i->is_active()) {
+                    active_nets.insert(*i);
+                } else {
+                    passive_nets.insert(*i);
+                }
+            }
+
+            networks_.insert(networks_.begin(), active_nets.begin(), active_nets.end());
+            networks_.insert(networks_.end(), passive_nets.begin(), passive_nets.end());
         }
 
         /**
@@ -119,7 +139,7 @@ namespace fine {
 
                 network &best_net = *(networks_.begin());
                 double best_net_rank = -numeric_limits<double>::max();
-                for (vector<network>::iterator j = networks_.begin(); j != networks_.end(); ++j) {
+                for (deque<network>::iterator j = networks_.begin(); j != networks_.end(); ++j) {
                     network& net = *j;
                     double rank = eval->rank(net);
                     cout << "ranked net " << net.name() << "... rank=" << rank << endl;

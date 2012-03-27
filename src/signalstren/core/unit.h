@@ -3,28 +3,35 @@
 
 #include <string>
 #include <map>
+#include <stdexcept>
+#include <limits>
 
 namespace fine {
     using namespace std;
 
     /**
       * Defines a measurement unit.
+      * Measurement unit is identified by its unique name.
       */
     class unit {
     private:
-        string name_;
+        string name_;                
     public:
         /**
           * Converts value in current unit to value in @p rhs
           * unit.
-          * Do not attempt this if is_convertible_to(@p rhs) returns
-          * false.
+          * Returns NaN if conversion is impossible.
           */
         double convert_to(const unit& rhs, double value) const {
             if (rhs.name_ == name_) {
+                // converting to itself
                 return value;
             } else {
-                return convert_to_internal(rhs, value);
+                if (is_convertible_to(rhs)) {
+                    return convert_to_internal(rhs, value);
+                } else {
+                    return numeric_limits<double>::quiet_NaN();
+                }
             }
         }
 
@@ -48,15 +55,16 @@ namespace fine {
           * Converts value in current unit to another compatible (but
           * not the same) unit.
           */
-        virtual double convert_to_internal(const unit& rhs, double value) const {
-            return 0;
+        virtual double convert_to_internal(const unit&, double) const {
+            // the unit is unconvertible - this is not meant to be called
+            throw logic_error("convert_to_internal called for an unconvertible unit");
         }
 
         /**
           * Returns whether values in this unit can be converted
-          * to a compatible (but not the same) unit @p rhs.
+          * to a compatible (but not the same) unit.
           */
-        virtual bool is_convertible_to_internal(const unit& rhs) const {
+        virtual bool is_convertible_to_internal(const unit&) const {
             return false;
         }
     public:

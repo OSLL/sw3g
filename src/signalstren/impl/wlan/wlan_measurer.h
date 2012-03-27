@@ -2,43 +2,76 @@
 #define WLAN_MEASURER_H
 
 #include <map>
+#include <iostream>
+#include <istream>
+#include <sstream>
+#include <limits>
 
 #include "core/measurer.h"
 #include "impl/parameters.h"
 #include "impl/units.h"
+
+#include "util.h"
+
+#include "wlan_scanner.h"
 
 using namespace std;
 
 namespace fine {
     namespace impl {
         class wlan_measurer: public measurer {
-        private:
-            // TODO real measurement
-            // TODO support for other parameters besides signal strength
-            map<string, double> MEASUREMENTS_;
         public:
-            wlan_measurer() {
-                MEASUREMENTS_["shivu"] = -74;
-                MEASUREMENTS_["SJCE_STUDENT"] = -35;
+            wlan_measurer():
+                cache_invalid_(true) {
+                register_unit(parameters::SIGNAL_STRENGTH, units::UNIT_POWER_IN_PERCENTS);
             }
-        protected:
-            double value_internal(const network &net, const parameter &param) const {
-                // TODO perform real measurement
-                if (param == parameters::SIGNAL_STRENGTH) {
-                    if (MEASUREMENTS_.find(net.name()) == MEASUREMENTS_.end()) {
-                        return -130;
-                    } else {
-                        return MEASUREMENTS_.at(net.name());
-                    }
+        private:
+            // network id -> map of <parameter,param value>
+            mutable map< string, map<parameter, double> > value_cache_;
+            mutable bool cache_invalid_;
+
+            /**
+              * Refreshes all parameter values for each WLAN network.
+              * Cache is invalidated (cache_invalid set to true) by the
+              * wlan_scanner
+              */
+            void refresh() const {
+                if (!cache_invalid_)
+                    return;
+
+                value_cache_.clear();
+
+                string measure_result = exec("script/wlan_measure.sh");
+                stringstream measure_stream(measure_result);
+                while (measure_stream) {
+                    double quality_in_percents;
+                    measure_stream >> quality_in_percents;
+                    string network_id;
+                    measure_stream >> network_id;
+
+                    // writing parameter values to a map
+                    map<parameter, double> net_map;
+                    net_map[parameters::SIGNAL_STRENGTH] = quality_in_percents;
+                    value_cache_[network_id] = net_map;
                 }
+
+                cache_invalid_ = false;
             }
 
-            const unit &measurement_unit(const parameter &param) const {
-                if (param == parameters::SIGNAL_STRENGTH) {
-                    return units::UNIT_POWER_IN_dBm;
+        protected:
+            double value_internal(const network &net, const parameter &param) const {
+                refresh();
+
+                if (value_cache_.find(net.id()) == value_cache_.end()) {
+                    // we have detected the network, but it has since then vanished.
+                    // returning a NaN
+                    return numeric_limits<double>::quiet_NaN();
                 }
+                return (value_cache_[net.id()])[param];
             }
-        };
+
+            friend class wlan_scanner;
+        };        
     }
 }
 
