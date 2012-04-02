@@ -14,8 +14,8 @@ message m_network {
   }
   // Network type
   required m_network_type type = 3;
-  // Is network active?
-  required bool is_active = 4;
+  // Are we currently connected to this network?
+  required bool is_connected = 4;
   
   repeated m_series all_series = 5;
 }

@@ -63,7 +63,7 @@ namespace fine {
             for (RepeatedPtrField<m_network>::const_iterator i = m_info.all_networks().begin();
                  i != m_info.all_networks().end(); ++i) {
                 const m_network &m_net = *i;
-                network net(m_net.id(), m_net.name(), (network_type) m_net.type(), m_net.is_active());
+                network net(m_net.id(), m_net.name(), (network_type) m_net.type(), m_net.is_connected());
                 networks_.insert(net);
 
                 vector<series> series_for_net;
@@ -120,7 +120,7 @@ namespace fine {
 
                 const network &net = i->first;
                 m_net->set_id(net.id());
-                m_net->set_is_active(net.is_active());
+                m_net->set_is_connected(net.is_connected());
                 m_net->set_name(net.name());
                 m_net->set_type((m_network_m_network_type) net.type());
 

@@ -72,7 +72,7 @@ namespace fine {
           * @param net - network
           */
         void push_network(const network& net) {
-            if (net.is_active()) {
+            if (net.is_connected()) {
                 networks_.push_front(net);
             } else {
                 networks_.push_back(net);
@@ -82,13 +82,13 @@ namespace fine {
 
         /**
           * Adds networks to vote for.
-          * Active networks will be added to the front of the list,
-          * passive to the end.
+          * Connected networks will be added to the front of the list,
+          * all others to the end.
           * @param nets - network list
           */
         void push_networks(const set<network> &nets) {
             for (set<network>::iterator i = nets.begin(); i != nets.end(); ++i) {
-                if (i->is_active()) {
+                if (i->is_connected()) {
                     networks_.push_front(*i);
                 } else {
                     networks_.push_back(*i);

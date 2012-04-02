@@ -52,7 +52,7 @@ namespace fine {
         std::string id_;
         std::string name_;
         network_type type_;
-        bool is_active_;
+        bool is_connected_;
     public:
         /**
           * Creates a network information entry with specified
@@ -60,17 +60,17 @@ namespace fine {
           * @param id - network identifier
           * @param name - network name (NEED NOT BE UNIQUE)
           * @param type - network type
-          * @param is_active - whether the device is currently connected to the network
+          * @param is_connected - whether the device is currently connected to the network
           */
-        network(const std::string &id, const std::string &name, const network_type type, bool is_active):
-            id_(id), name_(name), type_(type), is_active_(is_active) {
+        network(const std::string &id, const std::string &name, const network_type type, bool is_connected):
+            id_(id), name_(name), type_(type), is_connected_(is_connected) {
         }
 
         /**
           * Duplicates an existing network information entry.
           */
         network(const network &rhs):
-            id_(rhs.id_), name_(rhs.name_), type_(rhs.type_), is_active_(rhs.is_active_) {
+            id_(rhs.id_), name_(rhs.name_), type_(rhs.type_), is_connected_(rhs.is_connected_) {
         }
 
         bool operator==(const network& rhs) const {
@@ -106,8 +106,8 @@ namespace fine {
         /**
           * Returns whether network is active (currently connected to) or not
           */
-        bool is_active() const {
-            return is_active_;
+        bool is_connected() const {
+            return is_connected_;
         }
     };
 }
