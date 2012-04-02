@@ -38,10 +38,8 @@ HEADERS += bat.h \
     impl/eval/single/reg.h \
     impl/unit/signal.h \
     impl/param/signal.h \
-    impl/param/reg.h \
-    core/persist/net_info.pb.h
-SOURCES += bat.cpp main.cpp \
-    core/persist/net_info.pb.cc
+    impl/param/reg.h
+SOURCES += bat.cpp main.cpp
 
 CONFIG(debug, debug|release){
     DESTDIR = bin/debug
@@ -55,13 +53,36 @@ CONFIG(release, debug|release){
     TARGET=signalstren
 }
 
+### WLAN detection and parameter measurement scripts
 scripts.path = $${DESTDIR}/script/
 scripts.files = script/*.sh
 
 INSTALLS += scripts
 
+### Protocol Buffers
+PB_FILES += core/persist/*.proto
+
+# generate headers and sources for persistence
+pb.output = ${QMAKE_FILE_IN_PATH}/${QMAKE_FILE_IN_BASE}.pb.h
+pb.input = PB_FILES
+pb.commands = protoc --cpp_out . ${QMAKE_FILE_IN}
+pb.clean_commands = rm ${QMAKE_FILE_IN_PATH}/${QMAKE_FILE_IN_BASE}.pb.h
+pb.variable_out = HEADERS
+pb.name = PB
+QMAKE_EXTRA_COMPILERS += pb
+
+# dummy action to add generated sources to makefile
+pb_dummy.output = ${QMAKE_FILE_IN_PATH}/${QMAKE_FILE_IN_BASE}.pb.cc
+pb_dummy.input = PB_FILES
+pb_dummy.commands = echo ${QMAKE_FILE_IN}
+pb_dummy.clean_commands = rm ${QMAKE_FILE_IN_PATH}/${QMAKE_FILE_IN_BASE}.pb.cc
+pb_dummy.variable_out = SOURCES
+pb_dummy.name = PB_DUMMY
+QMAKE_EXTRA_COMPILERS += pb_dummy
+
 LIBS += -lprotobuf-lite
 
+### List of all non-C++ files
 OTHER_FILES += \
     script/wlan_measure.sh \
     script/wlan_scan.sh \
