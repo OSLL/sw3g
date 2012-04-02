@@ -7,6 +7,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
 #include <typeinfo>
+#include <iterator>
+#include <cstddef>
 
 #include "core/network.h"
 
@@ -21,8 +23,71 @@ namespace fine {
     template<typename K, typename T>
     class registry: boost::noncopyable {
     private:
-        map< K, shared_ptr<T> > objects_;
+        typedef map< K, shared_ptr<T> > map_type;
+
+        map_type objects_;
     public:
+        typedef registry<K, T> self;
+        typedef typename map_type::const_iterator map_iterator;
+
+        /**
+          * Iterator through the values stored in the registry.
+          */
+        class value_iterator: public std::iterator<std::forward_iterator_tag, T> {
+        private:
+            map_iterator iter_;
+        public:
+            typedef std::forward_iterator_tag iterator_category;
+            typedef T value_type;
+            typedef std::ptrdiff_t difference_type;
+            typedef T& reference;
+            typedef T* pointer;
+
+            value_iterator(map_iterator iter):
+                iter_(iter) {
+            }
+
+            value_iterator(const value_iterator &rhs):
+                iter_(rhs.iter_) {
+            }
+
+            reference operator*() const {
+                return *(iter_->second);
+            }
+
+            pointer operator->() const {
+                return iter_->second;
+            }
+
+            value_iterator &operator++() {
+                ++iter_;
+                return *this;
+            }
+
+            value_iterator operator++(int) {
+                value_iterator tmp(*this);
+                ++*this;
+                return tmp;
+            }
+
+            void swap(value_iterator &other) {
+                std::swap(iter_, other.iter_);
+            }
+
+            value_iterator &operator= (value_iterator other) {
+                swap(other);
+                return *this;
+            }
+
+            bool operator== (value_iterator &other) {
+                return iter_ == other.iter_;
+            }
+
+            bool operator!= (value_iterator &other) {
+                return !(*this == other);
+            }
+        };
+
         /**
           * Associates the specified copy-constructible object
           * with a key.
@@ -61,9 +126,45 @@ namespace fine {
         /**
           * Returns a shared instance of the registry.
           */
-        static registry<K, T>& instance() {
-            static registry<K, T> the_instance;
+        static self& instance() {
+            static self the_instance;
             return the_instance;
+        }
+
+        /**
+          * Returns a constant iterator through the <K,ptr T>-pairs
+          * stored in the registry pointing at the beginning of
+          * the registry. (K = key, T = value)
+          */
+        map_iterator cbegin() {
+            return objects_.begin();
+        }
+
+        /**
+          * Returns a constant iterator through the <K,ptr to T>-pairs
+          * stored in the registry pointing past the end of
+          * the registry. (K = key, T = value)
+          */
+        map_iterator cend() {
+            return objects_.end();
+        }
+
+        /**
+          * Returns a constant iterator through the values (T's)
+          * stored in the registry pointing at the beginning of
+          * the registry.
+          */
+        value_iterator vcbegin() {
+            return value_iterator(cbegin());
+        }
+
+        /**
+          * Returns a constant iterator through the values (T's)
+          * stored in the registry pointing past the end of
+          * the registry.
+          */
+        value_iterator vcend() {
+            return value_iterator(cend());
         }
     };
 

@@ -37,8 +37,7 @@ namespace fine {
         const static string NETINFO_FILENAME;
 
         void initialize_params() {
-            watched_params_.insert(PARAM(impl::parameters::SIGNAL_STRENGTH));
-            // TODO more intelligent parameter detection???
+            watched_params_.insert(params::instance().vcbegin(), params::instance().vcend());
         }
 
         net_info() {
@@ -72,10 +71,7 @@ namespace fine {
                      j != m_net.all_series().end(); ++j) {
                     const m_series &m_ser = *j;
 
-                    parameter &param = PARAM(m_ser.parameter());
-                    watched_params_.insert(param);
-
-                    series ser(param);
+                    series ser(PARAM(m_ser.parameter()));
                     ser.count_ = m_ser.size();
                     ser.current_ = m_ser.last_value();
                     ser.new_m_ = m_ser.new_m();
