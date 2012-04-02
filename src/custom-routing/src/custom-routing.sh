@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ###############################################################################
 ### Routes all ICMP packets through wlan interface; everything else through
@@ -42,13 +42,12 @@ FW=/sbin/iptables
 # add tables to iproute2 configuration
 if ! grep "balance-tables" /etc/iproute2/rt_tables > /dev/null; then 
   echo "Adding routing tables $WLAN_TABLE and $UMTS_TABLE"
-tablefile=<<EOF
+cat >>/etc/iproute2/rt_tables <<EOF
 ### BEGIN balance-tables
 1 $WLAN_TABLE
 2 $UMTS_TABLE
 ### END balance-tables
 EOF
-  echo $tablefile >> /etc/iproute2/rt_tables
 fi
 
 # enable forwarding
