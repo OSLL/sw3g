@@ -1,5 +1,5 @@
 option optimize_for = LITE_RUNTIME;
-	
+
 // Network identification information
 message m_network {
   // Network id
@@ -7,9 +7,13 @@ message m_network {
   // Human-readable Network Name
   required string name = 2;
   enum m_network_type {
+    // first item id
     FIRST = 0;
+    // Wireless Local Area Network
     WLAN = 0;
+    // 3G Network
     UMTS = 1;
+    // last item (guard value)
     LAST = 2;
   }
   // Network type
