@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE language SYSTEM "language.dtd">
+<language name="Google Protocol Buffers" version="1.0" kateversion="2.4" section="Sources" extensions="*.proto" author="Nickolay Amelichev (entropia@zombator.ru)">
+	<highlighting>
+		<list name="keywords">
+			<item> rpc </item>
+			<item> returns </item>
+			<item> import </item>
+			<item> group </item>
+			<item> extensions </item>
+			<item> to </item>
+			<item> max </item>
+		</list>
+		<list name="attributekeywords">
+			<item> optional </item>
+			<item> required </item>
+			<item> repeated </item>		
+		</list>
+		<list name="customtypekeywords">
+			<item> message </item>
+			<item> service </item>
+			<item> extend </item>
+		</list>
+		<list name="package">
+			<item> package </item>
+		</list>		
+		<list name="fieldannotations">
+			<item> default </item>
+			<item> packed </item>			
+			<item> deprecated </item>
+		</list>				
+		<list name="types">
+			<item> string </item>
+			<item> int32 </item>
+			<item> int64 </item>
+			<item> double </item>
+			<item> float </item>
+			<item> uint32 </item>
+			<item> uint64 </item>
+			<item> sint32 </item>
+			<item> sint64 </item>
+			<item> fixed32 </item>
+			<item> fixed64 </item>
+			<item> sfixed32 </item>
+			<item> sfixed64 </item>
+			<item> bool </item>
+			<item> bytes </item>
+		</list>
+		<list name="booleanvalues">
+		        <item> true </item>
+		        <item> false </item>
+		</list>
+		<list name="option">
+        		<item> option </item>
+		</list>
+		<list name="enum">
+		        <item> enum </item>
+		</list>
+		<contexts>
+			<context attribute="Normal Text" lineEndContext="#stay" name="Normal">			
+				<keyword attribute="Keyword" context="#stay" String="keywords"/>
+				<keyword attribute="Data Type" context="#stay" String="types"/>
+				
+				<keyword attribute="Keyword" context="#stay" String="booleanvalues"/>	
+				<Float attribute="Float" context="#stay">
+					<AnyChar String="fF" attribute="Float" context="#stay"/>
+				</Float>
+				<HlCOct attribute="Octal" context="#stay"/>
+				<HlCHex attribute="Hex" context="#stay"/>
+				<Int attribute="Decimal" context="#stay"/>
+				<RegExpr attribute="Decimal" context="#stay" String="//\s*BEGIN.*$" beginRegion="Region1"/>
+				<RegExpr attribute="Decimal" context="#stay" String="//\s*END.*$" endRegion="Region1"/>
+				<DetectChar attribute="String" context="String" char="&quot;"/>
+				
+				<Detect2Chars attribute="Comment" context="Commentar 1" char="/" char1="/"/>
+				<Detect2Chars attribute="Comment" context="Commentar 2" char="/" char1="*" beginRegion="Comment"/>
+				<DetectChar attribute="Symbol" context="#stay" char="{" beginRegion="Brace1"/>
+				<DetectChar attribute="Symbol" context="#stay" char="}" endRegion="Brace1"/>
+				<RegExpr attribute="Keyword" context="#stay" String="\.{3,3}\s+" />
+				<RegExpr attribute="Symbol" context="Member" String="[.]{1,1}" />
+				<AnyChar attribute="Symbol" context="#stay" String=":!%&amp;+,-/.*&lt;=&gt;?[]|~^&#59;"/>
+				
+				<keyword attribute="Keyword" context="CustomDataType" String="customtypekeywords"/>
+				
+				<keyword attribute="Keyword" context="Package" String="package"/>
+				
+				<keyword attribute="Keyword" context="Attribute Declaration" String="attributekeywords"/>
+				
+				<keyword attribute="Keyword" context="Option Declaration" String="option"/>
+				
+				<keyword attribute="Keyword" context="Enum Declaration" String="enum"/>			
+			</context>
+			
+			<context attribute="Identifier" lineEndContext="#stay" name="Enum Declaration">
+			        <RegExpr attribute="Data Type" context="EnumInside" String="[a-zA-Z\.][a-zA-Z0-9\.\_\-]*"/>
+			</context>
+			
+			<context attribute="Normal Text" lineEndContext="#stay" name="EnumInside">
+				<Detect2Chars attribute="Comment" context="Commentar 1" char="/" char1="/"/>
+				<Detect2Chars attribute="Comment" context="Commentar 2" char="/" char1="*" beginRegion="Comment"/>			
+			
+			        <DetectChar attribute="Normal Text" context="#stay" char="{" beginRegion="Brace1"/>
+			        <keyword attribute="Keyword" context="Option Declaration" String="option"/>
+       			        <DetectIdentifier attribute="Identifier" context="EnumInsideItemId"/>
+			        <DetectChar attribute="Normal Text" context="#pop#pop" char="}" endRegion="Brace1"/>			
+			</context>
+			
+			<context attribute="Identifier" lineEndContext="#stay" name="EnumInsideItemId">
+			        <DetectChar attribute="Normal Text" context="EnumInsideEq" char="="/>
+			</context>
+			
+			<context attribute="Normal Text" lineEndContext="#stay" name="EnumInsideEq">
+                                <Int attribute="Decimal" context="#stay"/>
+                                <DetectChar attribute="Decimal" context="#stay" char="0"/>
+                                <DetectChar attribute="Normal Text" context="ADDefVal" char="["/>
+                                <DetectChar attribute="Normal Text" context="#pop#pop" char=";"/>			
+			</context>
+			
+			<context attribute="Identifier" lineEndContext="#stay" name="Option Declaration">
+			        <DetectIdentifier attribute="Identifier" context="OPId"/>
+			</context>
+			
+			<context attribute="Identifier" lineEndContext="#stay" name="OPId">
+		                <DetectChar attribute="Normal Text" char="=" context="OPVal"/>
+			</context>
+			
+			<context attribute="Normal Text" lineEndContext="#stay" name="OPVal">
+		                <keyword attribute="Keyword" context="#stay" String="booleanvalues"/>	
+		                <Float attribute="Float" context="#stay">
+			                <AnyChar String="fF" attribute="Float" context="#stay"/>
+		                </Float>
+		                <HlCOct attribute="Octal" context="#stay"/>
+		                <HlCHex attribute="Hex" context="#stay"/>
+		                <Int attribute="Decimal" context="#stay"/>
+		                <RegExpr attribute="Decimal" context="#stay" String="//\s*BEGIN.*$" beginRegion="Region1"/>
+		                <RegExpr attribute="Decimal" context="#stay" String="//\s*END.*$" endRegion="Region1"/>
+		                <DetectChar attribute="String" context="String" char="&quot;"/>
+                                
+                                <DetectChar attribute="Normal Text" context="#pop#pop#pop" char=";"/> 			
+			</context>
+			
+			<context attribute="Normal Text" lineEndContext="#stay" name="Attribute Declaration">
+                                <keyword attribute="Data Type" context="ADType" String="types"/>
+                                <RegExpr attribute="Data Type" context="ADType" String="[a-zA-Z\.][a-zA-Z0-9\.\_\-]*"/>
+			</context>
+			
+			<context attribute="Data Type" lineEndContext="#stay" name="ADType">
+                                <DetectIdentifier attribute="Identifier" context="ADField"/>
+			</context>
+			
+                        <context attribute="Identifier" lineEndContext="#stay" name="ADField">
+                                <DetectChar attribute="Normal Text" context="ADEq" char="="/>
+                        </context>
+                        
+                        <context attribute="Normal Text" lineEndContext="#stay" name="ADDefVal">
+                                <keyword attribute="Keyword" context="#stay" String="fieldannotations"/>
+                                
+                          	<keyword attribute="Keyword" context="#stay" String="booleanvalues"/>	
+				<Float attribute="Float" context="#stay">
+					<AnyChar String="fF" attribute="Float" context="#stay"/>
+				</Float>
+				<HlCOct attribute="Octal" context="#stay"/>
+				<HlCHex attribute="Hex" context="#stay"/>
+				<Int attribute="Decimal" context="#stay"/>
+				<RegExpr attribute="Decimal" context="#stay" String="//\s*BEGIN.*$" beginRegion="Region1"/>
+				<RegExpr attribute="Decimal" context="#stay" String="//\s*END.*$" endRegion="Region1"/>
+				<DetectChar attribute="String" context="String" char="&quot;"/>
+				                                
+                                <DetectChar attribute="Normal Text" context="#pop" char="]"/>
+                        </context>                        
+                        
+                        <context attribute="Normal Text" lineEndContext="#stay" name="ADEq">
+                                <Int attribute="Decimal" context="#stay"/>                                
+                                <DetectChar attribute="Normal Text" context="ADDefVal" char="["/>
+                                <DetectChar attribute="Normal Text" context="#pop#pop#pop#pop" char=";"/>
+                        </context>
+			
+			<context attribute="String" lineEndContext="#pop" name="String">
+				<LineContinue attribute="String" context="#stay"/>
+				<HlCStringChar attribute="String Char" context="#stay"/>
+				<RegExpr attribute="String Char" context="#stay" String="\\u[0-9a-fA-F]{4}"/>
+				<DetectChar attribute="String" context="#pop" char="&quot;"/>
+			</context>
+			<context attribute="Comment" lineEndContext="#pop" name="Commentar 1"/>
+			<context attribute="Comment" lineEndContext="#stay" name="Commentar 2">
+				<Detect2Chars attribute="Comment" context="#pop" char="*" char1="/" endRegion="Comment"/>
+			</context>
+			<context attribute="Data Type" name="CustomDataType" lineEndContext="#stay">
+       			        <RegExpr attribute="Data Type" context="#pop" String="[a-zA-Z\.][a-zA-Z0-9\.\_\-]*"/>
+			</context>
+			<context attribute="Package" name="Package" lineEndContext="#stay">
+			        <DetectChar attribute="Normal Text" context="#pop" char=";"/>
+			</context>			
+		</contexts>
+		<itemDatas>
+			<itemData name="Normal Text"  defStyleNum="dsNormal"/>
+			<itemData name="Keyword"      defStyleNum="dsKeyword"/>
+			<itemData name="Data Type"    defStyleNum="dsDataType"/>
+			<itemData name="Decimal"      defStyleNum="dsDecVal"/>
+			<itemData name="Octal"        defStyleNum="dsBaseN"/>
+			<itemData name="Hex"          defStyleNum="dsBaseN"/>
+			<itemData name="Float"        defStyleNum="dsFloat"/>
+			<itemData name="String"       defStyleNum="dsString"/>
+			<itemData name="Comment"      defStyleNum="dsComment"/>
+			<itemData name="Symbol"       defStyleNum="dsNormal"/>
+                        <itemData name="Package"      defStyleNum="dsKeyword" color="#ff6767" selColor="#ffffff" bold="0" italic="0"/>
+                        <itemData name="Identifier"   defStyleNum="dsKeyword" color="#2020aa" selColor="#ffffff" bold="0" italic="1"/>
+		</itemDatas>
+	</highlighting>
+	<general>
+		<comments>
+			<comment name="singleLine" start="//"/>
+			<comment name="multiLine" start="/*" end="*/"/>
+		</comments>
+		<keywords casesensitive="1"/>
+	</general>
+</language>
