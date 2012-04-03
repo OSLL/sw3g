@@ -20,7 +20,7 @@ message m_network {
   required m_network_type type = 3;
   // Are we currently connected to this network?
   required bool is_connected = 4;
-  
+  // Measurement series, one for each measured parameter.
   repeated m_series all_series = 5;
 }
 
@@ -43,5 +43,9 @@ message m_series {
 
 // The whole persisted state is here
 message m_netinfo {
+  // list of all detected networks
   repeated m_network all_networks = 1;
+
+  // date & time of last call to signalstren in standard ISO format
+  required string last_call_time = 2;
 }

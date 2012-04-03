@@ -6,8 +6,10 @@
 #include <vector>
 #include <algorithm>
 #include <boost/noncopyable.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <iostream>
 #include <fstream>
+#include <ctime>
 
 #include "core/network.h"
 #include "core/parameter.h"
@@ -15,10 +17,6 @@
 #include "core/registries.h"
 
 #include "core/persist/net_info.pb.h"
-
-// TODO remove this when a real list of parameters will be read dynamically
-// instead of being constant
-#include "impl/param/reg.h"
 
 namespace fine {
     using namespace std;
@@ -33,33 +31,39 @@ namespace fine {
     private:
         /**
           * Persistent storage filename
-          */
+          */        
         const static string NETINFO_FILENAME;
+
+        /**
+          * Network Info cache lifetime
+          */
+        const static int NETINFO_CACHE_LIFETIME = 600;
+
+        /**
+          * Netinfo initialization time
+          */
+        posix_time::ptime init_time_;
+
+        /**
+          * List of parameter measurement series for each network
+          */
+        map< network,vector<series> > parameter_values_;
+
+        /**
+          * List of measured parameters
+          */
+        set<parameter> watched_params_;
+
+        /**
+          * List of networks which we know about
+          */
+        set<network> networks_;
 
         void initialize_params() {
             watched_params_.insert(params::instance().vcbegin(), params::instance().vcend());
         }
 
-        net_info() {
-            initialize_params();
-
-            filebuf buf;
-            buf.open(NETINFO_FILENAME.c_str(), ios_base::in);
-            // check if we found the file
-            if (!buf.is_open())
-                return;
-
-            // read all file data into array
-            size_t size = buf.pubseekoff(0, ios_base::end, ios_base::in);
-            buf.pubseekpos(0, ios_base::in);
-            char *data_buffer = new char[size];
-            buf.sgetn(data_buffer, size);
-
-            m_netinfo m_info;
-            // check if the data represents a correct netinfo state
-            if (!m_info.ParseFromArray(data_buffer, size))
-                return;
-
+        void initialize_measurements(const m_netinfo &m_info) {
             for (RepeatedPtrField<m_network>::const_iterator i = m_info.all_networks().begin();
                  i != m_info.all_networks().end(); ++i) {
                 const m_network &m_net = *i;
@@ -84,13 +88,44 @@ namespace fine {
 
                 parameter_values_[net] = series_for_net;
             }
+        }
+
+        net_info():
+        init_time_(posix_time::microsec_clock::universal_time()) {
+            initialize_params();
+
+            filebuf buf;
+            buf.open(NETINFO_FILENAME.c_str(), ios_base::in);
+            // check if we found the file
+            if (!buf.is_open())
+                return;
+
+            // read all file data into array
+            size_t size = buf.pubseekoff(0, ios_base::end, ios_base::in);
+            buf.pubseekpos(0, ios_base::in);
+            char* data_buffer = new char[size];
+            buf.sgetn(data_buffer, size);
+
+            m_netinfo m_info;
+            // check if the data represents a correct netinfo state
+            if (!m_info.ParseFromArray(data_buffer, size))
+                return;
+
+            // get last call time from netinfo storage
+            posix_time::ptime last_call = posix_time::from_iso_string(m_info.last_call_time());
+
+            cout << "=== Last program run: " << last_call << " ===" << endl;
+
+            if ((init_time_ - last_call).total_seconds() > NETINFO_CACHE_LIFETIME) {
+                // if we were called after NETINFO_CACHE_LIFETIME seconds,
+                // discard all information from the persistent storage
+                // and start anew.
+            } else {
+                initialize_measurements(m_info);
+            }
 
             delete[] data_buffer;
         }        
-
-        map< network,vector<series> > parameter_values_;
-        set<parameter> watched_params_;
-        set<network> networks_;
     public:
         void dump() {
             for (map< network, vector<series> >::iterator i = parameter_values_.begin(); i != parameter_values_.end(); ++i) {
@@ -139,6 +174,8 @@ namespace fine {
                     m_ser->set_parameter(j->for_param().name());
                 }
             }
+
+            m_info.set_last_call_time(posix_time::to_iso_string(init_time_));
 
             ofstream file_stream;
             file_stream.open(NETINFO_FILENAME.c_str());

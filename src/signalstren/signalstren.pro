@@ -53,6 +53,9 @@ CONFIG(release, debug|release){
     TARGET=signalstren
 }
 
+### boost::ptime
+LIBS += -lboost_date_time
+
 ### WLAN detection and parameter measurement scripts
 scripts.path = $${DESTDIR}/script/
 scripts.files = script/*.sh
