@@ -8,6 +8,7 @@ namespace fine {
           */
         namespace parameters {
             const string SIGNAL_STRENGTH = "Signal Strength";
+            const string SNR = "Signal-to-Noise Ratio";
         }
     }
 }

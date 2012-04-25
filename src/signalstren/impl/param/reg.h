@@ -27,7 +27,7 @@ namespace fine {
               */
             void init_units() {
                 // Power in %
-                make_unconvertible_unit(units::P_IN_PERCENTS);
+                make_unconvertible_unit(units::PERCENT);
                 // Power in dBm
                 make_unit(new units::power_in_dbm_unit());
 
@@ -39,7 +39,8 @@ namespace fine {
               * can discover them.
               */
             void init_params() {
-                make_param(parameters::SIGNAL_STRENGTH, UNIT(units::P_IN_PERCENTS));
+                make_param(parameters::SIGNAL_STRENGTH, UNIT(units::PERCENT));
+                make_param(parameters::SNR, UNIT(units::DBM));
 
                 // add new parameters before this line.
             }
