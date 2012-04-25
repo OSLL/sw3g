@@ -2,6 +2,7 @@
 #define SERIES_H
 
 #include <cmath>
+#include <limits>
 #include "core/parameter.h"
 #include "core/net_info.h"
 
@@ -31,7 +32,7 @@ namespace fine {
           * Constructs an empty series for parameter @p param.
           */
         series(parameter &param):
-            current_(0), count_(0), param_(param) {
+            current_(numeric_limits<double>::quiet_NaN()), count_(0), param_(param) {
         }
 
         series& operator=(const series& rhs) {
