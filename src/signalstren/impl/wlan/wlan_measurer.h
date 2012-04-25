@@ -25,7 +25,9 @@ namespace fine {
             wlan_measurer():
                 cache_invalid_(true) {
                 register_unit(PARAM(parameters::SIGNAL_STRENGTH),
-                              UNIT(units::P_IN_PERCENTS));
+                              UNIT(units::PERCENT));
+                register_unit(PARAM(parameters::SNR),
+                              UNIT(units::DBM));
             }
         private:
             // network id -> map of <parameter,param value>
@@ -43,27 +45,27 @@ namespace fine {
 
                 value_cache_.clear();
 
-                string measure_result = exec("script/wlan_measure.sh");
-                stringstream measure_stream(measure_result);
-                cout << measure_result;
+                stringstream measure_stream(exec("script/wlan_measure.sh"));
                 while (measure_stream) {
-                    string network_id;
-                    measure_stream >> network_id;
+                    string network_id = read_line(measure_stream);
 
                     if (measure_stream && (network_id.length() > 0)) {
-                        double quality_in_percents;
-                        measure_stream >> quality_in_percents;
-
-                        // writing parameter values to a map
+                        // map for network parameter values
                         map<parameter, double> net_map;
+
+                        // reading parameter values
+                        double snr = read_double_opt(measure_stream);
+                        double quality_in_percents = read_double_req(measure_stream);
+
+                        // filling the map
                         net_map[PARAM(parameters::SIGNAL_STRENGTH)] = quality_in_percents;
+                        net_map[PARAM(parameters::SNR)] = snr;
                         value_cache_[network_id] = net_map;
                     }
                 }
 
                 cache_invalid_ = false;
             }
-
         protected:
             double value_internal(const network &net, const parameter &param) const {
                 refresh();
@@ -74,6 +76,17 @@ namespace fine {
                     return numeric_limits<double>::quiet_NaN();
                 }
                 return (value_cache_[net.id()])[param];
+            }
+
+            bool has_measurement_internal(const network &net, const parameter &param) const {
+                refresh();
+
+                map<parameter, double> &net_meas_cache = value_cache_[net.id()];
+                if (net_meas_cache.find(param) == net_meas_cache.end())
+                    return false; // no such parameter
+
+                // value is not undefined (NaN)
+                return (net_meas_cache[param] == net_meas_cache[param]);
             }
 
             friend class wlan_scanner;

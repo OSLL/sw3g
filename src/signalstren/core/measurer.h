@@ -2,7 +2,6 @@
 #define MEASURER_H
 
 #include <limits>
-
 #include "core/network.h"
 #include "core/parameter.h"
 #include "core/unit.h"
@@ -20,8 +19,17 @@ namespace fine {
     /*abstract*/ class measurer {
     public:
         /**
+          * Returns whether parameter can be measured and actually has a recent
+          * measurement.
+          */
+        bool has_measurement(const network &net, const parameter &param) const {
+            return can_measure(param) && has_measurement_internal(net, param);
+        }
+
+        /**
           * Returns the current value of the parameter @p param of network @p net
           * in the base unit specified for parameter @p param.
+          * If there is no current measurement, NaN is returned.
           * If the parameter and measurer units are incompatible (measurer units cannot
           * be converted to parameter units), NaN is returned.
           */
@@ -35,6 +43,14 @@ namespace fine {
           * for them which are used by the measurer.
           */
         map< parameter, shared_ptr<const unit> > param_to_unit_;
+
+        /**
+          * Returns whether the measurer can give values of
+          * the specified parameter.
+          */
+        bool can_measure(const parameter &param) const {
+            return param_to_unit_.find(param) != param_to_unit_.end();
+        }
     protected:
         /**
           * Returns the current value of the parameter @p param of network @p net
@@ -52,6 +68,11 @@ namespace fine {
             }
             return *(param_to_unit_.at(param));
         }
+
+        /**
+          * Returns whether parameter actually has a recent measurement.
+          */
+        virtual bool has_measurement_internal(const network &net, const parameter &param) const = 0;
 
         /**
           * Registers measurement unit for a parameter

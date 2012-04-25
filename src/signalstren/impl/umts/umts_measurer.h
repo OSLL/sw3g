@@ -24,7 +24,7 @@ namespace fine {
                 MEASUREMENTS_["MegaFon"] = -25.5;
 
                 register_unit(PARAM(parameters::SIGNAL_STRENGTH),
-                              UNIT(units::P_IN_dBm));
+                              UNIT(units::DBM));
             }
         protected:
             double value_internal(const network &net, const parameter &param) const {
@@ -34,6 +34,11 @@ namespace fine {
                 // silently fail. since this is not a real measurer implementation,
                 // this is acceptable...
                 return numeric_limits<double>::quiet_NaN();
+            }
+
+            bool has_measurement_internal(const network &, const parameter &) const {
+                // FIXME not a real implementation
+                return true;
             }
         };
     }

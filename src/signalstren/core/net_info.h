@@ -252,14 +252,20 @@ namespace fine {
                 if (svec.size() > 0) {
                     for (vector<series>::iterator j = svec.begin(); j != svec.end(); ++j) {
                         const parameter &param = (*j).for_param();
-                        (*j).push(meas.value(net, param));
+
+                        if (meas.has_measurement(net, param)) {
+                            (*j).push(meas.value(net, param));
+                        }
                     }
                 } else {
                     // no previous measurements - add new series and store values there
                     for (set<parameter>::iterator k = watched_params_.begin(); k != watched_params_.end(); ++k) {
                         parameter param = *k;
                         series ser(param);
-                        ser.push(meas.value(net, param));
+                        if (meas.has_measurement(net, param)) {
+                            ser.push(meas.value(net, param));
+                        }
+
                         svec.push_back(ser);
                     }
                 }
