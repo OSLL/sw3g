@@ -35,6 +35,12 @@ namespace fine {
             current_(numeric_limits<double>::quiet_NaN()), count_(0), param_(param) {
         }
 
+        series(const series &rhs):
+            current_(rhs.current_), old_m_(rhs.old_m_), new_m_(rhs.new_m_),
+            old_s_(rhs.old_s_), new_s_(rhs.new_s_),
+            count_(rhs.count_), param_(rhs.param_) {
+        }
+
         series& operator=(const series& rhs) {
             current_ = rhs.current_;
             count_ = rhs.count_;
