@@ -30,6 +30,10 @@ namespace fine {
             double min_rank() {
                 return 0;
             }
+
+            string name() const {
+                return "signal_strength_evaluator";
+            }
         };
     }
 }

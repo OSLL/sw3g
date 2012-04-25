@@ -38,7 +38,8 @@ HEADERS += bat.h \
     impl/eval/single/reg.h \
     impl/unit/signal.h \
     impl/param/signal.h \
-    impl/param/reg.h
+    impl/param/reg.h \
+    core/vote.h
 SOURCES += bat.cpp main.cpp
 
 CONFIG(debug, debug|release){
