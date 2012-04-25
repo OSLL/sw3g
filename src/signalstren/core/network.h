@@ -28,6 +28,28 @@ namespace fine {
     };
 
     /**
+      * Network status
+      */
+    enum network_status {
+        /**
+          * Network was detected during a scan.
+          */
+        DETECTED,
+        /**
+          * Detected net is current access network.
+          */
+        CONNECTED,
+        /**
+          * Inactive (not connected to) network vanished from scan.
+          * It might reappear on subsequent scans.
+          *
+          * This status is currently set by the net_info.
+          * Measurers should not attempt to set it manually.
+          */
+        VANISHED
+    };
+
+    /**
       * Prefixes for switch scripts.
       * Indexed by network_type.
       */
@@ -52,7 +74,9 @@ namespace fine {
         std::string id_;
         std::string name_;
         network_type type_;
-        bool is_connected_;
+        network_status status_;
+
+        size_t vanishing_counter_;
     public:
         /**
           * Creates a network information entry with specified
@@ -60,17 +84,34 @@ namespace fine {
           * @param id - network identifier
           * @param name - network name (NEED NOT BE UNIQUE)
           * @param type - network type
-          * @param is_connected - whether the device is currently connected to the network
+          * @param status - network status
           */
-        network(const std::string &id, const std::string &name, const network_type type, bool is_connected):
-            id_(id), name_(name), type_(type), is_connected_(is_connected) {
+        network(const std::string &id, const std::string &name, const network_type type, network_status status):
+            id_(id), name_(name), type_(type), status_(status),
+            vanishing_counter_((status == VANISHED ? 1 : 0)) {
+        }
+
+        /**
+          * Creates a network information entry with specified
+          * name and type.
+          * @param id - network identifier
+          * @param name - network name (NEED NOT BE UNIQUE)
+          * @param type - network type
+          * @param status - network status
+          * @param vanishing_counter - number of subsequent non-detections of network in scans
+          */
+        network(const std::string &id, const std::string &name, const network_type type, network_status status,
+                size_t vanishing_counter):
+            id_(id), name_(name), type_(type), status_(status),
+            vanishing_counter_(vanishing_counter) {
         }
 
         /**
           * Duplicates an existing network information entry.
           */
         network(const network &rhs):
-            id_(rhs.id_), name_(rhs.name_), type_(rhs.type_), is_connected_(rhs.is_connected_) {
+            id_(rhs.id_), name_(rhs.name_), type_(rhs.type_), status_(rhs.status_),
+            vanishing_counter_(rhs.vanishing_counter_) {
         }
 
         bool operator==(const network& rhs) const {
@@ -104,10 +145,45 @@ namespace fine {
         }
 
         /**
-          * Returns whether network is active (currently connected to) or not
+          * Returns whether network is active (currently connected to) or not.
           */
         bool is_connected() const {
-            return is_connected_;
+            return (status_ == CONNECTED);
+        }
+
+        /**
+          * Returns whether this network has vanished from scan.
+          */
+        bool is_vanished() const {
+            return (status_ == VANISHED);
+        }
+
+        /**
+          * If status() == VANISHED, the number of subsequent scans performed
+          * during which the network still was not detected.
+          * Otherwise, zero.
+          */
+        size_t vanishing_counter() const {
+            return vanishing_counter_;
+        }
+
+        /**
+          * Returns network status.
+          */
+        network_status status() const {
+            return status_;
+        }        
+
+        /**
+          * Returns description for this network in a vanished state.
+          * If network is already in vanished state, increments the vanishing_counter().
+          */
+        const network vanish() const {
+            if (status_ != VANISHED) {
+                return network(id_, name_, type_, VANISHED);
+            } else {
+                return network(id_, name_, type_, VANISHED, vanishing_counter_ + 1);
+            }
         }
     };
 }

@@ -35,11 +35,6 @@ namespace fine {
         const static string NETINFO_FILENAME;
 
         /**
-          * Network Info cache lifetime
-          */
-        const static int NETINFO_CACHE_LIFETIME = 600;
-
-        /**
           * Netinfo initialization time
           */
         posix_time::ptime init_time_;
@@ -59,21 +54,28 @@ namespace fine {
           */
         set<network> networks_;
 
+        /**
+          * Network ages
+          */
+        map<network, size_t> network_ages_;
+
         void initialize_params() {
             watched_params_.insert(params::instance().vcbegin(), params::instance().vcend());
         }
 
-        void initialize_measurements(const m_netinfo &m_info) {
-            for (RepeatedPtrField<m_network>::const_iterator i = m_info.all_networks().begin();
+        void initialize_measurements(const mnetinfo &m_info) {
+            for (RepeatedPtrField<mnetwork>::const_iterator i = m_info.all_networks().begin();
                  i != m_info.all_networks().end(); ++i) {
-                const m_network &m_net = *i;
-                network net(m_net.id(), m_net.name(), (network_type) m_net.type(), m_net.is_connected());
+                const mnetwork &m_net = *i;
+                network net(m_net.id(), m_net.name(), (network_type) m_net.type(),
+                            (network_status) m_net.status(), m_net.vanishing_timer());
                 networks_.insert(net);
+                network_ages_[net] = m_net.time_of_existence();
 
                 vector<series> series_for_net;
-                for (RepeatedPtrField<m_series>::const_iterator j = m_net.all_series().begin();
+                for (RepeatedPtrField<mseries>::const_iterator j = m_net.all_series().begin();
                      j != m_net.all_series().end(); ++j) {
-                    const m_series &m_ser = *j;
+                    const mseries &m_ser = *j;
 
                     series ser(PARAM(m_ser.parameter()));
                     ser.count_ = m_ser.size();
@@ -106,7 +108,7 @@ namespace fine {
             char* data_buffer = new char[size];
             buf.sgetn(data_buffer, size);
 
-            m_netinfo m_info;
+            mnetinfo m_info;
             // check if the data represents a correct netinfo state
             if (!m_info.ParseFromArray(data_buffer, size))
                 return;
@@ -116,53 +118,163 @@ namespace fine {
 
             cout << "=== Last program run: " << last_call << " ===" << endl;
 
-            if ((init_time_ - last_call).total_seconds() > NETINFO_CACHE_LIFETIME) {
+            if ((init_time_ - last_call).total_seconds() > CACHE_LIFETIME) {
                 // if we were called after NETINFO_CACHE_LIFETIME seconds,
                 // discard all information from the persistent storage
                 // and start anew.
+                cout << "Discarded all previous measurements (if any)." << endl;
             } else {
                 initialize_measurements(m_info);
             }
 
             delete[] data_buffer;
-        }        
+        }
+
+        void erase_net(map< network, vector<series> >::iterator &iter) {
+            map<network, size_t>::iterator found = network_ages_.find(iter->first);
+            if (found != network_ages_.end()) {
+                network_ages_.erase(found);
+            }
+
+            parameter_values_.erase(iter++);
+        }
+
+        /**
+          * remove measurements for no longer existing networks
+          * @param nets - detected networks
+          */
+        void prune_network_list(set<network> &nets) {
+            // increment ages for all detected networks
+            for(set<network>::iterator iter = nets.begin(); iter != nets.end(); ++iter) {
+                network_ages_[*iter]++;
+            }
+
+            for(map< network, vector<series> >::iterator iter = parameter_values_.begin();
+                iter != parameter_values_.end();) {
+                const network &net = iter->first;
+
+                if (nets.find(net) != nets.end()) {
+                    // network is in current scan as well in the previous
+                    // ones
+                    ++iter;
+                    continue;
+                }
+
+                // found network present in previous scan(s), but absent
+                // in the current
+                switch(net.status()) {
+                case CONNECTED:
+                    // if network which we were connected to does not
+                    // appear in the scan, it is deleted immediately,
+                    // because a disconnection (likely) happened.
+                    erase_net(iter);
+                    break;
+                case DETECTED:
+                case VANISHED:
+                    const network &vanished = net.vanish();
+                    if (vanished.vanishing_counter() <= VANISHING_TIMEOUT) {
+                        // network was detected in some previous scan,
+                        // but is absent in current
+                        networks_.insert(vanished);
+                        vector<series> all_series = parameter_values_[net];
+                        parameter_values_.erase(parameter_values_.find(net));
+                        parameter_values_[vanished] = all_series;
+
+                        // important: network age is not incremented
+                        // for vanished networks
+
+                        ++iter;
+                    } else {
+                        // network vanished for too long, removing from the list
+                        erase_net(iter);
+                    }
+                    break;
+                }
+            }
+        }
+
+        /**
+          * read and record measurements for all detected networks
+          * @param nets - detected networks
+          */
+        void read_measurements(set<network> &nets) {
+            for (set<network>::iterator i = nets.begin(); i != nets.end(); ++i) {
+                const network& net = *i;
+                const measurer &meas = MEASURER(net.type());
+                vector<series> &svec = parameter_values_[net];
+
+                if (svec.size() > 0) {
+                    for (vector<series>::iterator j = svec.begin(); j != svec.end(); ++j) {
+                        const parameter &param = (*j).for_param();
+
+                        if (meas.has_measurement(net, param)) {
+                            (*j).push(meas.value(net, param));
+                        }
+                    }
+                } else {
+                    // no previous measurements - add new series and store values there
+                    for (set<parameter>::iterator k = watched_params_.begin(); k != watched_params_.end(); ++k) {
+                        parameter param = *k;
+                        series ser(param);
+                        if (meas.has_measurement(net, param)) {
+                            ser.push(meas.value(net, param));
+                        }
+
+                        svec.push_back(ser);
+                    }
+                }
+            }
+        }
+
     public:
+        /**
+          * Network Info cache lifetime
+          */
+        const static int CACHE_LIFETIME;
+
+        /**
+          * Maximum number of calls to signalstren during which the network
+          * may remain in VANISHING state. After this number of calls to
+          * signalstren is made, network is deleted from the list.
+          */
+        const static size_t VANISHING_TIMEOUT;
+
         void dump() {
             for (map< network, vector<series> >::iterator i = parameter_values_.begin(); i != parameter_values_.end(); ++i) {
                 const network &net = i->first;
-                cout << "NETWORK - " << net.id() << "\n" <<
-                        net.name() << "\n" << net.type() << "\n" <<
-                        "    SERIES:\n";
+                cout << net.id() << " " << net.name() << " " << net.type() << ",age=" <<
+                     age(net) << ",vanishing_counter=" << net.vanishing_counter() << endl;
                 vector<series> &vec = i->second;
                 for (vector<series>::iterator j = vec.begin(); j != vec.end(); ++j) {
                     series &ser = *j;
-                    cout << "        (series for param " << ser.for_param().name() <<
-                            "[measured in " << ser.for_param().base_unit().name() << "]" << "): \n";
-                    cout << "            series size= " << ser.size() << ", mean=" << ser.mean() << "," <<
-                            "variance=" << ser.variance() << ",stdev=" << ser.stdev() << ",last_value=" <<
-                            ser.peek() << "\n\n";
+                    cout << "  " << ser.for_param().name() <<
+                            "[" << ser.for_param().base_unit().name() << "]" << ": " <<
+                            "size=" << ser.size() << ",mean=" << ser.mean() << "," <<
+                            "variance=" << ser.variance() << ",stdev=" << ser.stdev() <<
+                            ",last_value=" << ser.peek() << endl;
                 }
-                cout << "\n\n";
             }
         }
 
         ~net_info() {
-            m_netinfo m_info;
+            mnetinfo m_info;
 
             for (map< network, vector<series> >::iterator i = parameter_values_.begin();
                  i != parameter_values_.end(); ++i) {
-                m_network *m_net = m_info.add_all_networks();
+                mnetwork *m_net = m_info.add_all_networks();
 
                 const network &net = i->first;
                 m_net->set_id(net.id());
-                m_net->set_is_connected(net.is_connected());
+                m_net->set_status((mnetwork_estatus) net.status());
                 m_net->set_name(net.name());
-                m_net->set_type((m_network_m_network_type) net.type());
+                m_net->set_type((mnetwork_etype) net.type());
+                m_net->set_vanishing_timer(net.vanishing_counter());
+                m_net->set_time_of_existence(age(net));
 
                 vector<series> &ser = i->second;
 
                 for (vector<series>::iterator j = ser.begin(); j != ser.end(); ++j) {
-                    m_series *m_ser = m_net->add_all_series();
+                    mseries *m_ser = m_net->add_all_series();
 
                     m_ser->set_last_value(j->peek());
                     m_ser->set_size(j->size());
@@ -222,6 +334,16 @@ namespace fine {
         }
 
         /**
+          * Returns time of existence for the network (number of calls to signalstren
+          * during which the network was detected in scans).
+          *
+          * @param net - network
+          */
+        size_t age(const network &net) {
+            return network_ages_[net];
+        }
+
+        /**
           * This method is periodically called to notify net_info about currently present networks.
           * All information about networks not in the @p nets list is erased.
           * For each network in the @p nets list, measurements of its parameters is performed.
@@ -232,44 +354,8 @@ namespace fine {
             networks_.clear();
             networks_.insert(nets.begin(), nets.end());
 
-            // remove measurements for no longer existing networks
-            for(map< network, vector<series> >::iterator iter = parameter_values_.begin();
-                iter != parameter_values_.end(); ) {
-                pair< network, vector<series> > val = *iter;
-                if (nets.find(val.first) == nets.end()) {
-                    // network does not exist
-                    parameter_values_.erase(iter++);
-                } else {
-                    ++iter;
-                }
-            }
-
-            for (set<network>::iterator i = nets.begin(); i != nets.end(); ++i) {
-                const network& net = *i;
-                const measurer &meas = MEASURER(net.type());
-                vector<series> &svec = parameter_values_[net];
-
-                if (svec.size() > 0) {
-                    for (vector<series>::iterator j = svec.begin(); j != svec.end(); ++j) {
-                        const parameter &param = (*j).for_param();
-
-                        if (meas.has_measurement(net, param)) {
-                            (*j).push(meas.value(net, param));
-                        }
-                    }
-                } else {
-                    // no previous measurements - add new series and store values there
-                    for (set<parameter>::iterator k = watched_params_.begin(); k != watched_params_.end(); ++k) {
-                        parameter param = *k;
-                        series ser(param);
-                        if (meas.has_measurement(net, param)) {
-                            ser.push(meas.value(net, param));
-                        }
-
-                        svec.push_back(ser);
-                    }
-                }
-            }
+            prune_network_list(nets);
+            read_measurements(nets);
         }
     };
 

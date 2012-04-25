@@ -1,12 +1,16 @@
 #ifndef MEASURER_H
 #define MEASURER_H
 
+#include <boost/shared_ptr.hpp>
 #include <limits>
+
 #include "core/network.h"
 #include "core/parameter.h"
 #include "core/unit.h"
 
 namespace fine {
+    using namespace boost;
+
     /**
       * Defines a measurer: something which can measure current value of a
       * network parameter.

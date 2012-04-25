@@ -4,12 +4,14 @@
 
 #include "core/scanner.h"
 #include "core/evaluator.h"
+#include "core/vote.h"
+
+#include "impl/config.h"
+
 #include "core/network.h"
 #include "core/net_info.h"
 
 #include "core/registries.h"
-
-#include "impl/config.h"
 
 using namespace std;
 using namespace fine;
@@ -35,7 +37,7 @@ void bat::main_sequence() {
     cout << "=============== before update ================" << "\n";
     net_info::instance().dump();
     net_info::instance().update(detected);
-    cout << "\n\n=============== after update ================" << "\n";
+    cout << "=============== after update ================" << "\n";
     net_info::instance().dump();
     cout << endl;
 

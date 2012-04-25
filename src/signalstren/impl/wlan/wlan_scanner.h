@@ -35,18 +35,23 @@ namespace fine {
                 string net_data = exec("script/wlan_scan.sh");
                 istringstream str_net_data(net_data);
 
+                // adding networks detected during current scan
                 while (str_net_data) {
                     string network_id = read_line(str_net_data);
                     string network_name;
-                    if (str_net_data)
-                        network_name = read_line(str_net_data);
+                    if (!str_net_data)
+                        break;
+                    if (network_id.length() == 0)
+                        continue;
 
-                    if (network_id.length() > 0) {
-                        cout << network_id << "/" << network_name << endl;
-                        result.insert(network(network_id, network_name, WLAN,
-                            (network_id == active_net_id)));
-                    }
+                    network_name = read_line(str_net_data);
+
+                    network_status status = (network_id == active_net_id) ?
+                                CONNECTED: DETECTED;
+                    result.insert(network(network_id, network_name, WLAN,
+                        status));
                 }
+
                 return result;
             }
         };

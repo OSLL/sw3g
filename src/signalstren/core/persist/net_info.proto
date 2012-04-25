@@ -1,12 +1,12 @@
 option optimize_for = LITE_RUNTIME;
 
 // Network identification information
-message m_network {
+message mnetwork {
   // Network id
   required string id = 1;
   // Human-readable Network Name
   required string name = 2;
-  enum m_network_type {
+  enum etype {
     // first item id
     FIRST = 0;
     // Wireless Local Area Network
@@ -16,16 +16,33 @@ message m_network {
     // last item (guard value)
     LAST = 2;
   }
+  // network status
+  enum estatus {
+    // detected while scanning
+    DETECTED = 0;
+    // detected and is current connection
+    CONNECTED = 1;
+    // vanished from scan, but kept in hopes of reappearing
+    VANISHED = 2;
+  }
   // Network type
-  required m_network_type type = 3;
-  // Are we currently connected to this network?
-  required bool is_connected = 4;
+  required etype type = 3;
   // Measurement series, one for each measured parameter.
-  repeated m_series all_series = 5;
+  repeated mseries all_series = 4;
+  // Network status
+  required estatus status = 5;
+  // Time of existence (number of calls to signalstren during
+  // which the network was still present in the scan)
+  required int32 time_of_existence = 6;
+  // Vanishing timer: number of calls to signalstren during
+  // while network status is still `VANISHED'.
+  // Reset when status is changed from VANISHED to DETECTED
+  // or CONNECTED.
+  required int32 vanishing_timer = 7;
 }
 
 // Represents a series of values of some parameter.
-message m_series {
+message mseries {
   // Name of the measured parameter
   required string parameter = 1;
   
@@ -42,9 +59,9 @@ message m_series {
 }
 
 // The whole persisted state is here
-message m_netinfo {
+message mnetinfo {
   // list of all detected networks
-  repeated m_network all_networks = 1;
+  repeated mnetwork all_networks = 1;
 
   // date & time of last call to signalstren in standard ISO format
   required string last_call_time = 2;

@@ -21,4 +21,17 @@
 #include "impl/wlan/reg.h"
 // Add new new network types before this line
 
+//// Tweakable parameters
+#include "core/net_info.h"
+
+// Network Info cache lifetime
+const int fine::net_info::CACHE_LIFETIME = 600;
+
+// Timer for networks vanishing from scan
+const size_t fine::net_info::VANISHING_TIMEOUT = 5;
+
+#include "core/vote.h"
+// Minimum network age to participate in voting
+const size_t fine::vote::MINIMAL_NETWORK_AGE = 1;
+
 #endif // CONFIG_H
