@@ -36,11 +36,10 @@ namespace fine {
                 istringstream str_net_data(net_data);
 
                 while (str_net_data) {
-                    string network_id;
+                    string network_id = read_line(str_net_data);
                     string network_name;
-                    str_net_data >> network_id;
                     if (str_net_data)
-                        str_net_data >> network_name;
+                        network_name = read_line(str_net_data);
 
                     if (network_id.length() > 0) {
                         cout << network_id << "/" << network_name << endl;
